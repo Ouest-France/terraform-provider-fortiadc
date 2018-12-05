@@ -38,6 +38,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"fortiadc_loadbalance_real_server": resourceFortiadcLoadbalanceRealServer(),
 			"fortiadc_loadbalance_pool":        resourceFortiadcLoadbalancePool(),
+			"fortiadc_loadbalance_pool_member": resourceFortiadcLoadbalancePoolMember(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
