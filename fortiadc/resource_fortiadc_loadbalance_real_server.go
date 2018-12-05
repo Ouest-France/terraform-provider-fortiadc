@@ -23,11 +23,13 @@ func resourceFortiadcLoadbalanceRealServer() *schema.Resource {
 			},
 			"address6": &schema.Schema{
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
+				Default:  "::",
 			},
 			"status": &schema.Schema{
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
+				Default:  "enable",
 			},
 		},
 	}
