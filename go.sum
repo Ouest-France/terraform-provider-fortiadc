@@ -1,5 +1,5 @@
-github.com/Ouest-France/gofortiadc v0.0.0-20181205134734-5dffe9e1d3ff h1:ygaAVgRc7k3F+QkvZpI8NUywD7F1IqbhATAREcy6XHw=
-github.com/Ouest-France/gofortiadc v0.0.0-20181205134734-5dffe9e1d3ff/go.mod h1:ouc+Fl3luQg5r9Kk8SQNb2tbJaCpd3Xgre/rLswRYUA=
+github.com/Ouest-France/gofortiadc v0.0.1 h1:TACbZnsw4vgtCI1t/zlvh+sJy2AlRpTr255sIsvNmmA=
+github.com/Ouest-France/gofortiadc v0.0.1/go.mod h1:ouc+Fl3luQg5r9Kk8SQNb2tbJaCpd3Xgre/rLswRYUA=
 github.com/agext/levenshtein v1.2.1 h1:QmvMAjj2aEICytGiWzmxoE0x2KZvE0fvmqMOfy2tjT8=
 github.com/agext/levenshtein v1.2.1/go.mod h1:JEDfjyjHDjOF/1e4FlBE/PkbqA9OfWu2ki2W0IB5558=
 github.com/apparentlymart/go-cidr v1.0.0 h1:lGDvXx8Lv9QHjrAVP7jyzleG4F9+FkRhJcEsDFxeb8w=
@@ -51,8 +51,8 @@ github.com/hashicorp/go-version v1.0.0 h1:21MVWPKDphxa7ineQQTrCU5brh7OuVVAzGOCnn
 github.com/hashicorp/go-version v1.0.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
 github.com/hashicorp/hcl v1.0.0 h1:0Anlzjpi4vEasTeNFn2mLJgTSwt0+6sfsiTG8qcWGx4=
 github.com/hashicorp/hcl v1.0.0/go.mod h1:E5yfLk+7swimpb2L/Alb/PJmXilQ/rhwaUYs4T20WEQ=
-github.com/hashicorp/hcl2 v0.0.0-20181204002630-cd67ba1b25f3 h1:zWjLqvzzWtY+hxisvREouIFI0+8xhForyG5SqoxRvfQ=
-github.com/hashicorp/hcl2 v0.0.0-20181204002630-cd67ba1b25f3/go.mod h1:ShfpTh661oAaxo7VcNxg0zcZW6jvMa7Moy2oFx7e5dE=
+github.com/hashicorp/hcl2 v0.0.0-20181206005933-df9794be1f23 h1:RcXTRSKSKCJYXxI7yaOwAH1lYfZIzxhQhW2bFC8hABE=
+github.com/hashicorp/hcl2 v0.0.0-20181206005933-df9794be1f23/go.mod h1:ShfpTh661oAaxo7VcNxg0zcZW6jvMa7Moy2oFx7e5dE=
 github.com/hashicorp/hil v0.0.0-20170627220502-fa9f258a9250 h1:fooK5IvDL/KIsi4LxF/JH68nVdrBSiGNPhS2JAQjtjo=
 github.com/hashicorp/hil v0.0.0-20170627220502-fa9f258a9250/go.mod h1:KHvg/R2/dPtaePb16oW4qIyzkMxXOL38xjRN64adsts=
 github.com/hashicorp/terraform v0.11.10 h1:XYZ/V+teSckRfZdwxsoP+66v0slHixe5Ai8wxqY/lfo=

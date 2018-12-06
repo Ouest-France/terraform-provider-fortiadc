@@ -1,7 +1,7 @@
 module github.com/Ouest-France/terraform-provider-fortiadc
 
 require (
-	github.com/Ouest-France/gofortiadc v0.0.0-20181205134734-5dffe9e1d3ff
+	github.com/Ouest-France/gofortiadc v0.0.1
 	github.com/apparentlymart/go-cidr v1.0.0 // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/hashicorp/go-getter v0.0.0-20181119194526-bd1edc22f8ea // indirect
@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/go-plugin v0.0.0-20181030172320-54b6ff97d818 // indirect
 	github.com/hashicorp/go-uuid v1.0.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/hashicorp/hcl2 v0.0.0-20181204002630-cd67ba1b25f3 // indirect
+	github.com/hashicorp/hcl2 v0.0.0-20181206005933-df9794be1f23 // indirect
 	github.com/hashicorp/hil v0.0.0-20170627220502-fa9f258a9250 // indirect
 	github.com/hashicorp/terraform v0.11.10
 	github.com/mitchellh/cli v1.0.0 // indirect
