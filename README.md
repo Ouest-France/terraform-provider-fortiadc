@@ -8,7 +8,7 @@ A [Terraform][1] plugin for managing [FortiADC][2].
 * [`fortiadc` Provider](#provider-configuration)
 * [Resources](#resources)
   * [`fortiadc_loadbalance_real_server`](#fortiadc_loadbalance_real_server)
-  * [`fortiadc_loadbalance_real_server_pool`](#fortiadc_loadbalance_real_server_pool)
+  * [`fortiadc_loadbalance_pool`](#fortiadc_loadbalance_pool)
 * [Requirements](#requirements)
 
 ## Installation
@@ -98,6 +98,54 @@ resource "fortiadc_loadbalance_pool" "mypool" {
 | Property             | Description                                    |
 | ----------------     | -----------------------                        |
 | `id`                 | Pool Mkey                                      |
+
+### `fortiadc_loadbalance_pool_member`
+
+A resource for managing real server pool member.
+
+#### Example
+
+```hcl
+resource "fortiadc_loadbalance_real_server" "myrealserver" {
+  name     = "myrealserver"
+  address  = "192.168.10.20"
+  address6 = "::"
+  status   = "enable"
+}
+
+resource "fortiadc_loadbalance_pool" "mypool" {
+  name              = "mypool"
+  healtcheck_enable = true
+  healtcheck_list   = ["LB_HLTHCK_HTTP", "LB_HLTHCK_HTTPS"]
+}
+
+resource "fortiadc_loadbalance_pool_member" "mymember" {
+  name = "${fortiadc_loadbalance_real_server.myrealserver.name}"
+  pool = "${fortiadc_loadbalance_pool.mypool.name}"
+  port = 80
+}
+```
+
+#### Arguments
+
+| Property                      | Description                             | Type        | Required    | Default    |
+| ----------------              | -----------------------                 | -------     | ----------- | ---------- |
+| `name`                        | Real server name                        | String      | true        |            |
+| `pool`                        | Pool name                               | String      | true        |            |
+| `status`                      | Member status (enable/disable/maintain) | String      | false       | `enable`   |
+| `port`                        | Port                                    | Int         | true        |            |
+| `weight`                      | Weight                                  | Int         | false       | `1`        |
+| `conn_limit`                  | Connection limit                        | Int         | false       | `0`        |
+| `conn_rate_limit`             | Connection Rate Limit                   | Int         | false       | `0`        |
+| `recover`                     | Recover                                 | Int         | false       | `0`        |
+| `warmup`                      | Warm Up                                 | Int         | false       | `0`        |
+| `warmrate`                    | Warm Rate                               | Int         | false       | `100`      |
+
+#### Attributes
+
+| Property             | Description                                    |
+| ----------------     | -----------------------                        |
+| `id`                 | Member Mkey                                    |
 
 
 ## Requirements
