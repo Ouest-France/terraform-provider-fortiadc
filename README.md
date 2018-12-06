@@ -8,6 +8,7 @@ A [Terraform][1] plugin for managing [FortiADC][2].
 * [`fortiadc` Provider](#provider-configuration)
 * [Resources](#resources)
   * [`fortiadc_loadbalance_real_server`](#fortiadc_loadbalance_real_server)
+  * [`fortiadc_loadbalance_real_server_pool`](#fortiadc_loadbalance_real_server_pool)
 * [Requirements](#requirements)
 
 ## Installation
@@ -66,6 +67,37 @@ resource "fortiadc_loadbalance_real_server" "myrealserver" {
 | Property             | Description                                    |
 | ----------------     | -----------------------                        |
 | `id`                 | Real server Mkey                               |
+
+### `fortiadc_loadbalance_pool`
+
+A resource for managing real server pool.
+
+#### Example
+
+```hcl
+resource "fortiadc_loadbalance_pool" "mypool" {
+  name              = "mypool"
+  healtcheck_enable = true
+  healtcheck_list   = ["LB_HLTHCK_HTTP", "LB_HLTHCK_HTTPS"]
+}
+```
+
+#### Arguments
+
+| Property                      | Description                          | Type        | Required    | Default    |
+| ----------------              | -----------------------              | -------     | ----------- | ---------- |
+| `name`                        | Pool name                            | String      | true        |            |
+| `pool_type`                   | Pool type (ipv4/ipv6)                | String      | false       | `ipv4`     |
+| `healtcheck_enable`           | Enable healthchecks                  | Bool        | false       | `false`    |
+| `healtcheck_relationship`     | Healtchecks relationship (AND/OR)    | String      | false       | `AND`      |
+| `healtcheck_list`             | Healtchecks list                     | ListString  | false       | `[]`       |
+| `real_server_ssl_profile`     | Real servers SSL profile             | String      | false       | `NONE`     |
+
+#### Attributes
+
+| Property             | Description                                    |
+| ----------------     | -----------------------                        |
+| `id`                 | Pool Mkey                                      |
 
 
 ## Requirements
