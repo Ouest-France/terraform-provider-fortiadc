@@ -19,6 +19,7 @@ func resourceFortiadcLoadbalancePool() *schema.Resource {
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"pool_type": &schema.Schema{
 				Type:     schema.TypeString,

@@ -21,6 +21,7 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"status": &schema.Schema{
 				Type:     schema.TypeString,

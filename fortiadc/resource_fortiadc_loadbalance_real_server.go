@@ -16,6 +16,7 @@ func resourceFortiadcLoadbalanceRealServer() *schema.Resource {
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"address": &schema.Schema{
 				Type:     schema.TypeString,
