@@ -45,7 +45,7 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 			"packet_forward_method": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
-				Default:  "",
+				Default:  "NAT",
 			},
 			"nat_source_pool": &schema.Schema{
 				Type:     schema.TypeString,
