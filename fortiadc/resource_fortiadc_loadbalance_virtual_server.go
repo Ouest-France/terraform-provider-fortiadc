@@ -120,6 +120,9 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 	if d.Get("http_to_https").(bool) {
 		http2https = "enable"
 	}
+	if len(d.Get("client_ssl_profile").(string)) == 0 {
+		http2https = ""
+	}
 
 	req := gofortiadc.LoadbalanceVirtualServerReq{
 		Status:              d.Get("status").(string),
@@ -130,14 +133,12 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		PacketFwdMethod:     d.Get("packet_forward_method").(string),
 		SrcPool:             d.Get("nat_source_pool").(string),
 		Port:                fmt.Sprintf("%d", d.Get("port").(int)),
-		PortRange:           "0",
 		ConnectionLimit:     fmt.Sprintf("%d", d.Get("connection_limit").(int)),
 		ContentRouting:      contentRouting,
 		ContentRewriting:    "disable",
 		Warmup:              "0",
 		Warmrate:            "10",
 		ConnectionRateLimit: fmt.Sprintf("%d", d.Get("connection_rate_limit").(int)),
-		Log:                 "disable",
 		Alone:               "enable",
 		Mkey:                d.Get("name").(string),
 		Interface:           d.Get("interface").(string),
@@ -227,6 +228,9 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 	if d.Get("http_to_https").(bool) {
 		http2https = "enable"
 	}
+	if len(d.Get("client_ssl_profile").(string)) == 0 {
+		http2https = ""
+	}
 
 	req := gofortiadc.LoadbalanceVirtualServerReq{
 		Status:              d.Get("status").(string),
@@ -237,14 +241,12 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		PacketFwdMethod:     d.Get("packet_forward_method").(string),
 		SrcPool:             d.Get("nat_source_pool").(string),
 		Port:                fmt.Sprintf("%d", d.Get("port").(int)),
-		PortRange:           "0",
 		ConnectionLimit:     fmt.Sprintf("%d", d.Get("connection_limit").(int)),
 		ContentRouting:      contentRouting,
 		ContentRewriting:    "disable",
 		Warmup:              "0",
 		Warmrate:            "10",
 		ConnectionRateLimit: fmt.Sprintf("%d", d.Get("connection_rate_limit").(int)),
-		Log:                 "enable",
 		Alone:               "enable",
 		Mkey:                d.Get("name").(string),
 		Interface:           d.Get("interface").(string),
