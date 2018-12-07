@@ -202,6 +202,8 @@ resource "fortiadc_loadbalance_virtual_server" "myvirtualserver" {
 | `profile`                 | Profile                                 | String      | false       | `LB_PROF_TCP`           |
 | `method`                  | Method                                  | String      | false       | `LB_METHOD_ROUND_ROBIN` |
 | `pool`                    | Pool name                               | String      | true        |                         |
+| `client_ssl_profile`      | Client SSL profile                      | String      | false       | ` `                     |
+| `http_to_https`           | Redirect HTTP to HTTPS when L7          | Bool        | false       | `false`                 |
 
 #### Attributes
 

@@ -90,6 +90,16 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"client_ssl_profile": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "",
+			},
+			"http_to_https": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
 		},
 	}
 }
@@ -104,6 +114,11 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 
 	if d.Get("packet_forward_method").(string) != "FullNAT" && len(d.Get("nat_source_pool").(string)) > 0 {
 		return errors.New("nat_source_pool cannot be defined when packet_forward_method is not FullNAT")
+	}
+
+	http2https := "disable"
+	if d.Get("http_to_https").(bool) {
+		http2https = "enable"
 	}
 
 	req := gofortiadc.LoadbalanceVirtualServerReq{
@@ -122,13 +137,15 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		Warmup:              "0",
 		Warmrate:            "10",
 		ConnectionRateLimit: fmt.Sprintf("%d", d.Get("connection_rate_limit").(int)),
-		Log:                 "enable",
+		Log:                 "disable",
 		Alone:               "enable",
 		Mkey:                d.Get("name").(string),
 		Interface:           d.Get("interface").(string),
 		Profile:             d.Get("profile").(string),
 		Method:              d.Get("method").(string),
 		Pool:                d.Get("pool").(string),
+		ClientSSLProfile:    d.Get("client_ssl_profile").(string),
+		HTTP2HTTPS:          http2https,
 	}
 
 	err := client.LoadbalanceCreateVirtualServer(req)
@@ -154,6 +171,11 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		contentRouting = true
 	}
 
+	http2https := false
+	if rs.HTTP2HTTPS == "enable" {
+		http2https = true
+	}
+
 	d.Set("status", rs.Status)
 	d.Set("type", rs.Type)
 	d.Set("address_type", rs.AddrType)
@@ -165,6 +187,8 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 	d.Set("profile", rs.Profile)
 	d.Set("method", rs.Method)
 	d.Set("pool", rs.Pool)
+	d.Set("client_ssl_profile", rs.ClientSSLProfile)
+	d.Set("http_to_https", http2https)
 
 	port, err := strconv.ParseInt(strings.TrimSpace(rs.Port), 10, 64)
 	if err != nil {
@@ -199,6 +223,11 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		return errors.New("nat_source_pool cannot be defined when packet_forward_method is not FullNAT")
 	}
 
+	http2https := "disable"
+	if d.Get("http_to_https").(bool) {
+		http2https = "enable"
+	}
+
 	req := gofortiadc.LoadbalanceVirtualServerReq{
 		Status:              d.Get("status").(string),
 		Type:                d.Get("type").(string),
@@ -222,6 +251,8 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		Profile:             d.Get("profile").(string),
 		Method:              d.Get("method").(string),
 		Pool:                d.Get("pool").(string),
+		ClientSSLProfile:    d.Get("client_ssl_profile").(string),
+		HTTP2HTTPS:          http2https,
 	}
 
 	err := client.LoadbalanceUpdateVirtualServer(req)

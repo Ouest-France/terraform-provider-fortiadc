@@ -1,5 +1,7 @@
 github.com/Ouest-France/gofortiadc v0.0.1 h1:TACbZnsw4vgtCI1t/zlvh+sJy2AlRpTr255sIsvNmmA=
 github.com/Ouest-France/gofortiadc v0.0.1/go.mod h1:ouc+Fl3luQg5r9Kk8SQNb2tbJaCpd3Xgre/rLswRYUA=
+github.com/Ouest-France/gofortiadc v0.0.2 h1:lvv6TjVw/1EwmHVnf5WN866l5ABovZRUz41t72XShqk=
+github.com/Ouest-France/gofortiadc v0.0.2/go.mod h1:ouc+Fl3luQg5r9Kk8SQNb2tbJaCpd3Xgre/rLswRYUA=
 github.com/agext/levenshtein v1.2.1 h1:QmvMAjj2aEICytGiWzmxoE0x2KZvE0fvmqMOfy2tjT8=
 github.com/agext/levenshtein v1.2.1/go.mod h1:JEDfjyjHDjOF/1e4FlBE/PkbqA9OfWu2ki2W0IB5558=
 github.com/apparentlymart/go-cidr v1.0.0 h1:lGDvXx8Lv9QHjrAVP7jyzleG4F9+FkRhJcEsDFxeb8w=
