@@ -12,6 +12,7 @@ A [Terraform][1] plugin for managing [FortiADC][2].
   * [`fortiadc_loadbalance_pool_member`](#fortiadc_loadbalance_pool_member)
   * [`fortiadc_loadbalance_virtual_server`](#fortiadc_loadbalance_virtual_server)
   * [`fortiadc_loadbalance_content_routing`](#fortiadc_loadbalance_content_routing)
+  * [`fortiadc_loadbalance_content_routing_condition`](#fortiadc_loadbalance_content_routing_condition)
 * [Requirements](#requirements)
 
 ## Installation
@@ -248,6 +249,50 @@ resource "fortiadc_loadbalance_content_routing" "mycr" {
 | Property             | Description                                    |
 | ----------------     | -----------------------                        |
 | `id`                 | Content routing Mkey                           |
+
+
+### `fortiadc_loadbalance_content_routing_condition`
+
+A resource for managing content routing condition.
+
+#### Example
+
+```hcl
+resource "fortiadc_loadbalance_pool" "mypool" {
+  name              = "mypool"
+  healtcheck_enable = true
+  healtcheck_list   = ["LB_HLTHCK_HTTP", "LB_HLTHCK_HTTPS"]
+}
+
+resource "fortiadc_loadbalance_content_routing" "mycr" {
+  name    = "mycr"
+  pool    = "${fortiadc_loadbalance_pool.mypool.name}"
+}
+
+resource "fortiadc_loadbalance_content_routing_condition" "mycrcond" {
+  content_routing = "${fortiadc_loadbalance_content_routing.mycr.name}"
+  object          = "http-request-url"
+  type            = "string"
+  content         = "myvhost.domain.loc"
+}
+```
+
+#### Arguments
+
+| Property           | Description                                 | Type        | Required    | Default                 |
+| ----------------   | -----------------------                     | -------     | ----------- | ----------              |
+| `content_routing`  | Parent content routing name                 | String      | true        |                         |
+| `object`           | Matching object type (ex: http-host-header) | String      | true        |                         |
+| `type`             | Matching comparison (ex: string)            | String      | true        |                         |
+| `content`          | Matching content                            | String      | true        |                         |
+| `reverse`          | Enable reverse                              | Bool        | false       | `false`                 |
+
+
+#### Attributes
+
+| Property             | Description                      |
+| ----------------     | -----------------------          |
+| `id`                 | Content routing condition Mkey   |
 
 
 ## Requirements
