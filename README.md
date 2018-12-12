@@ -11,6 +11,7 @@ A [Terraform][1] plugin for managing [FortiADC][2].
   * [`fortiadc_loadbalance_pool`](#fortiadc_loadbalance_pool)
   * [`fortiadc_loadbalance_pool_member`](#fortiadc_loadbalance_pool_member)
   * [`fortiadc_loadbalance_virtual_server`](#fortiadc_loadbalance_virtual_server)
+  * [`fortiadc_loadbalance_content_routing`](#fortiadc_loadbalance_content_routing)
 * [Requirements](#requirements)
 
 ## Installation
@@ -211,6 +212,42 @@ resource "fortiadc_loadbalance_virtual_server" "myvirtualserver" {
 | Property             | Description                                    |
 | ----------------     | -----------------------                        |
 | `id`                 | Virtual server Mkey                            |
+
+### `fortiadc_loadbalance_content_routing`
+
+A resource for managing content routing.
+
+#### Example
+
+```hcl
+resource "fortiadc_loadbalance_pool" "mypool" {
+  name              = "mypool"
+  healtcheck_enable = true
+  healtcheck_list   = ["LB_HLTHCK_HTTP", "LB_HLTHCK_HTTPS"]
+}
+
+resource "fortiadc_loadbalance_content_routing" "mycr" {
+  name    = "mycr"
+  pool    = "${fortiadc_loadbalance_pool.mypool.name}"
+}
+```
+
+#### Arguments
+
+| Property                  | Description                             | Type        | Required    | Default                 |
+| ----------------          | -----------------------                 | -------     | ----------- | ----------              |
+| `name`                    | Content routing name                    | String      | true        |                         |
+| `type`                    | Type                                    | String      | false       | `l7-content-routing`    |
+| `pool`                    | Real server destination pool            | String      | true        |                         |
+| `ipv4`                    | Source IPv4 address for l4 mode         | String      | false       | `0.0.0.0/0`             |
+| `ipv6`                    | Source IPv6 address for l4 mode         | String      | false       | `::/0`                  |
+| `comment`                 | Comment                                 | String      | false       | `comments`              |
+
+#### Attributes
+
+| Property             | Description                                    |
+| ----------------     | -----------------------                        |
+| `id`                 | Content routing Mkey                           |
 
 
 ## Requirements
