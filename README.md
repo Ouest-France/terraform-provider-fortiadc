@@ -197,6 +197,7 @@ resource "fortiadc_loadbalance_virtual_server" "myvirtualserver" {
 | `port`                    | Port                                    | Int         | true        |                         |
 | `connection_limit`        | Connection limit                        | Int         | false       | `0`                     |
 | `content_routing_enable`  | Enable content routing                  | Bool        | false       | `false`                 |
+| `content_routing_list`    | List of content routing                 | ListString  | false       | `[]`                    |
 | `connection_rate_limit`   | Connection rate limit                   | Int         | false       | `0`                     |
 | `interface`               | Interface                               | String      | false       | `port1`                 |
 | `profile`                 | Profile                                 | String      | false       | `LB_PROF_TCP`           |

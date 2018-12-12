@@ -66,6 +66,11 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
+			"content_routing_list": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 			"connection_rate_limit": &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -107,6 +112,21 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*gofortiadc.Client)
 
+	crList := []string{}
+	if raw, ok := d.GetOk("content_routing_list"); ok {
+		for _, v := range raw.([]interface{}) {
+			crList = append(crList, v.(string))
+		}
+	}
+
+	if d.Get("content_routing_enable").(bool) && len(crList) == 0 {
+		return errors.New("content_routing_list cannot be empty when content_routing_enable is set to true")
+	}
+
+	if !d.Get("content_routing_enable").(bool) && len(crList) > 0 {
+		return errors.New("content_routing_list must be empty when content_routing_enable is set to false")
+	}
+
 	contentRouting := "disable"
 	if d.Get("content_routing_enable").(bool) {
 		contentRouting = "enable"
@@ -135,6 +155,7 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		Port:                fmt.Sprintf("%d", d.Get("port").(int)),
 		ConnectionLimit:     fmt.Sprintf("%d", d.Get("connection_limit").(int)),
 		ContentRouting:      contentRouting,
+		ContentRoutingList:  strings.Join(crList, " "),
 		ContentRewriting:    "disable",
 		Warmup:              "0",
 		Warmrate:            "10",
@@ -177,6 +198,14 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		http2https = true
 	}
 
+	crList := strings.Split(rs.ContentRoutingList, " ")
+	if len(crList) > 1 {
+		crList = crList[:len(crList)-1]
+	}
+	if contentRouting == false {
+		crList = []string{}
+	}
+
 	d.Set("status", rs.Status)
 	d.Set("type", rs.Type)
 	d.Set("address_type", rs.AddrType)
@@ -184,6 +213,7 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 	d.Set("packet_forward_method", rs.PacketFwdMethod)
 	d.Set("nat_source_pool", strings.TrimSpace(rs.SrcPool))
 	d.Set("content_routing_enable", contentRouting)
+	d.Set("content_routing_list", crList)
 	d.Set("interface", rs.Interface)
 	d.Set("profile", rs.Profile)
 	d.Set("method", rs.Method)
@@ -215,6 +245,21 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*gofortiadc.Client)
 
+	crList := []string{}
+	if raw, ok := d.GetOk("content_routing_list"); ok {
+		for _, v := range raw.([]interface{}) {
+			crList = append(crList, v.(string))
+		}
+	}
+
+	if d.Get("content_routing_enable").(bool) && len(crList) == 0 {
+		return errors.New("content_routing_list cannot be empty when content_routing_enable is set to true")
+	}
+
+	if !d.Get("content_routing_enable").(bool) && len(crList) > 0 {
+		return errors.New("content_routing_list must be empty when content_routing_enable is set to false")
+	}
+
 	contentRouting := "disable"
 	if d.Get("content_routing_enable").(bool) {
 		contentRouting = "enable"
@@ -243,6 +288,7 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		Port:                fmt.Sprintf("%d", d.Get("port").(int)),
 		ConnectionLimit:     fmt.Sprintf("%d", d.Get("connection_limit").(int)),
 		ContentRouting:      contentRouting,
+		ContentRoutingList:  strings.Join(crList, " "),
 		ContentRewriting:    "disable",
 		Warmup:              "0",
 		Warmrate:            "10",
