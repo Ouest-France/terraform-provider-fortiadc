@@ -296,7 +296,7 @@ resource "fortiadc_loadbalance_content_routing_condition" "mycrcond" {
 
 
 ## Requirements
-* FortiADC == 4.8.x
+* FortiADC >= 5.1
 
 [1]: https://www.terraform.io
 [2]: https://www.fortinet.com/products/application-delivery-controller/fortiadc.html
