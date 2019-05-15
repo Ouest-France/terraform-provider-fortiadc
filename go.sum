@@ -5,6 +5,10 @@ github.com/Azure/go-ntlmssp v0.0.0-20170803034930-c92175d54006/go.mod h1:chxPXzS
 github.com/ChrisTrenkamp/goxpath v0.0.0-20170625215350-4fe035839290/go.mod h1:nuWgzSkT5PnyOd+272uUmV0dnAnAn42Mk7PiQC5VzN4=
 github.com/Ouest-France/gofortiadc v0.0.4 h1:yxZZWWKnRjr/6pkr/pfqOUUzIbqtUEFm3lEQPeUcI/w=
 github.com/Ouest-France/gofortiadc v0.0.4/go.mod h1:vI3Koq2UDtlZV1ZEmpAAIwcvbd5zdLXlna4YSe20/pc=
+github.com/Ouest-France/gofortiadc v0.0.6-0.20190514123451-7d939ef9cf4e h1:lIot8YKK5nDnClbs1+DyjwxcCklult1VRZKKvES4nss=
+github.com/Ouest-France/gofortiadc v0.0.6-0.20190514123451-7d939ef9cf4e/go.mod h1:vI3Koq2UDtlZV1ZEmpAAIwcvbd5zdLXlna4YSe20/pc=
+github.com/Ouest-France/gofortiadc v0.0.6 h1:YT2uZEbJ5+enVAVuGpF5B7SGYcyh0EkqbXvHQYdYjdM=
+github.com/Ouest-France/gofortiadc v0.0.6/go.mod h1:vI3Koq2UDtlZV1ZEmpAAIwcvbd5zdLXlna4YSe20/pc=
 github.com/Unknwon/com v0.0.0-20151008135407-28b053d5a292/go.mod h1:KYCjqMOeHpNuTOiFQU6WEcTG7poCJrUs0YgyHNtn1no=
 github.com/abdullin/seq v0.0.0-20160510034733-d5467c17e7af/go.mod h1:5Jv4cbFiHJMsVxt52+i0Ha45fjshj6wxYr1r19tB9bw=
 github.com/agext/levenshtein v1.2.1 h1:QmvMAjj2aEICytGiWzmxoE0x2KZvE0fvmqMOfy2tjT8=
