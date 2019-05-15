@@ -71,6 +71,16 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+			"content_rewriting_enable": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"content_rewriting_list": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 			"connection_rate_limit": &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -119,6 +129,14 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		}
 	}
 
+	rwList := []string{}
+	if raw, ok := d.GetOk("content_rewriting_list"); ok {
+		for _, v := range raw.([]interface{}) {
+			rwList = append(rwList, v.(string))
+		}
+	}
+
+	// Content routing
 	if d.Get("content_routing_enable").(bool) && len(crList) == 0 {
 		return errors.New("content_routing_list cannot be empty when content_routing_enable is set to true")
 	}
@@ -132,6 +150,21 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		contentRouting = "enable"
 	}
 
+	// Content rewriting
+	if d.Get("content_rewriting_enable").(bool) && len(rwList) == 0 {
+		return errors.New("content_routing_list cannot be empty when content_rewriting_enable is set to true")
+	}
+
+	if !d.Get("content_rewriting_enable").(bool) && len(rwList) > 0 {
+		return errors.New("content_rewriting_list must be empty when content_rewriting_enable is set to false")
+	}
+
+	contentRewriting := "disable"
+	if d.Get("content_rewriting_enable").(bool) {
+		contentRewriting = "enable"
+	}
+
+	// Packet forward
 	if d.Get("packet_forward_method").(string) != "FullNAT" && len(d.Get("nat_source_pool").(string)) > 0 {
 		return errors.New("nat_source_pool cannot be defined when packet_forward_method is not FullNAT")
 	}
@@ -145,29 +178,30 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 	}
 
 	req := gofortiadc.LoadbalanceVirtualServerReq{
-		Status:              d.Get("status").(string),
-		Type:                d.Get("type").(string),
-		AddrType:            d.Get("address_type").(string),
-		Address:             d.Get("address").(string),
-		Address6:            "::",
-		PacketFwdMethod:     d.Get("packet_forward_method").(string),
-		SrcPool:             d.Get("nat_source_pool").(string),
-		Port:                fmt.Sprintf("%d", d.Get("port").(int)),
-		ConnectionLimit:     fmt.Sprintf("%d", d.Get("connection_limit").(int)),
-		ContentRouting:      contentRouting,
-		ContentRoutingList:  strings.Join(crList, " "),
-		ContentRewriting:    "disable",
-		Warmup:              "0",
-		Warmrate:            "10",
-		ConnectionRateLimit: fmt.Sprintf("%d", d.Get("connection_rate_limit").(int)),
-		Alone:               "enable",
-		Mkey:                d.Get("name").(string),
-		Interface:           d.Get("interface").(string),
-		Profile:             d.Get("profile").(string),
-		Method:              d.Get("method").(string),
-		Pool:                d.Get("pool").(string),
-		ClientSSLProfile:    d.Get("client_ssl_profile").(string),
-		HTTP2HTTPS:          http2https,
+		Status:               d.Get("status").(string),
+		Type:                 d.Get("type").(string),
+		AddrType:             d.Get("address_type").(string),
+		Address:              d.Get("address").(string),
+		Address6:             "::",
+		PacketFwdMethod:      d.Get("packet_forward_method").(string),
+		SrcPool:              d.Get("nat_source_pool").(string),
+		Port:                 fmt.Sprintf("%d", d.Get("port").(int)),
+		ConnectionLimit:      fmt.Sprintf("%d", d.Get("connection_limit").(int)),
+		ContentRouting:       contentRouting,
+		ContentRoutingList:   strings.Join(crList, " "),
+		ContentRewriting:     contentRewriting,
+		ContentRewritingList: strings.Join(rwList, " "),
+		Warmup:               "0",
+		Warmrate:             "10",
+		ConnectionRateLimit:  fmt.Sprintf("%d", d.Get("connection_rate_limit").(int)),
+		Alone:                "enable",
+		Mkey:                 d.Get("name").(string),
+		Interface:            d.Get("interface").(string),
+		Profile:              d.Get("profile").(string),
+		Method:               d.Get("method").(string),
+		Pool:                 d.Get("pool").(string),
+		ClientSSLProfile:     d.Get("client_ssl_profile").(string),
+		HTTP2HTTPS:           http2https,
 	}
 
 	err := client.LoadbalanceCreateVirtualServer(req)
@@ -193,6 +227,11 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		contentRouting = true
 	}
 
+	contentRewriting := false
+	if rs.ContentRewriting == "enable" {
+		contentRewriting = true
+	}
+
 	http2https := false
 	if rs.HTTP2HTTPS == "enable" {
 		http2https = true
@@ -206,6 +245,14 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		crList = []string{}
 	}
 
+	rwList := strings.Split(rs.ContentRewritingList, " ")
+	if len(rwList) > 1 {
+		rwList = rwList[:len(rwList)-1]
+	}
+	if contentRewriting == false {
+		rwList = []string{}
+	}
+
 	d.Set("status", rs.Status)
 	d.Set("type", rs.Type)
 	d.Set("address_type", rs.AddrType)
@@ -214,6 +261,8 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 	d.Set("nat_source_pool", strings.TrimSpace(rs.SrcPool))
 	d.Set("content_routing_enable", contentRouting)
 	d.Set("content_routing_list", crList)
+	d.Set("content_rewriting_enable", contentRewriting)
+	d.Set("content_rewriting_list", rwList)
 	d.Set("interface", rs.Interface)
 	d.Set("profile", rs.Profile)
 	d.Set("method", rs.Method)
@@ -252,6 +301,14 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		}
 	}
 
+	rwList := []string{}
+	if raw, ok := d.GetOk("content_rewriting_list"); ok {
+		for _, v := range raw.([]interface{}) {
+			rwList = append(rwList, v.(string))
+		}
+	}
+
+	// Content routing
 	if d.Get("content_routing_enable").(bool) && len(crList) == 0 {
 		return errors.New("content_routing_list cannot be empty when content_routing_enable is set to true")
 	}
@@ -265,6 +322,21 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		contentRouting = "enable"
 	}
 
+	// Content rewriting
+	if d.Get("content_rewriting_enable").(bool) && len(rwList) == 0 {
+		return errors.New("content_rewriting_list cannot be empty when content_rewriting_enable is set to true")
+	}
+
+	if !d.Get("content_rewriting_enable").(bool) && len(rwList) > 0 {
+		return errors.New("content_rewriting_list must be empty when content_rewriting_enable is set to false")
+	}
+
+	contentRewriting := "disable"
+	if d.Get("content_rewriting_enable").(bool) {
+		contentRewriting = "enable"
+	}
+
+	// Packet forward
 	if d.Get("packet_forward_method").(string) != "FullNAT" && len(d.Get("nat_source_pool").(string)) > 0 {
 		return errors.New("nat_source_pool cannot be defined when packet_forward_method is not FullNAT")
 	}
@@ -278,29 +350,30 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 	}
 
 	req := gofortiadc.LoadbalanceVirtualServerReq{
-		Status:              d.Get("status").(string),
-		Type:                d.Get("type").(string),
-		AddrType:            d.Get("address_type").(string),
-		Address:             d.Get("address").(string),
-		Address6:            "::",
-		PacketFwdMethod:     d.Get("packet_forward_method").(string),
-		SrcPool:             d.Get("nat_source_pool").(string),
-		Port:                fmt.Sprintf("%d", d.Get("port").(int)),
-		ConnectionLimit:     fmt.Sprintf("%d", d.Get("connection_limit").(int)),
-		ContentRouting:      contentRouting,
-		ContentRoutingList:  strings.Join(crList, " "),
-		ContentRewriting:    "disable",
-		Warmup:              "0",
-		Warmrate:            "10",
-		ConnectionRateLimit: fmt.Sprintf("%d", d.Get("connection_rate_limit").(int)),
-		Alone:               "enable",
-		Mkey:                d.Get("name").(string),
-		Interface:           d.Get("interface").(string),
-		Profile:             d.Get("profile").(string),
-		Method:              d.Get("method").(string),
-		Pool:                d.Get("pool").(string),
-		ClientSSLProfile:    d.Get("client_ssl_profile").(string),
-		HTTP2HTTPS:          http2https,
+		Status:               d.Get("status").(string),
+		Type:                 d.Get("type").(string),
+		AddrType:             d.Get("address_type").(string),
+		Address:              d.Get("address").(string),
+		Address6:             "::",
+		PacketFwdMethod:      d.Get("packet_forward_method").(string),
+		SrcPool:              d.Get("nat_source_pool").(string),
+		Port:                 fmt.Sprintf("%d", d.Get("port").(int)),
+		ConnectionLimit:      fmt.Sprintf("%d", d.Get("connection_limit").(int)),
+		ContentRouting:       contentRouting,
+		ContentRoutingList:   strings.Join(crList, " "),
+		ContentRewriting:     contentRewriting,
+		ContentRewritingList: strings.Join(rwList, " "),
+		Warmup:               "0",
+		Warmrate:             "10",
+		ConnectionRateLimit:  fmt.Sprintf("%d", d.Get("connection_rate_limit").(int)),
+		Alone:                "enable",
+		Mkey:                 d.Get("name").(string),
+		Interface:            d.Get("interface").(string),
+		Profile:              d.Get("profile").(string),
+		Method:               d.Get("method").(string),
+		Pool:                 d.Get("pool").(string),
+		ClientSSLProfile:     d.Get("client_ssl_profile").(string),
+		HTTP2HTTPS:           http2https,
 	}
 
 	err := client.LoadbalanceUpdateVirtualServer(req)
