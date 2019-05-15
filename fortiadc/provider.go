@@ -42,6 +42,7 @@ func Provider() *schema.Provider {
 			"fortiadc_loadbalance_virtual_server":            resourceFortiadcLoadbalanceVirtualServer(),
 			"fortiadc_loadbalance_content_routing":           resourceFortiadcLoadbalanceContentRouting(),
 			"fortiadc_loadbalance_content_routing_condition": resourceFortiadcLoadbalanceContentRoutingCondition(),
+			"fortiadc_loadbalance_content_rewriting":         resourceFortiadcLoadbalanceContentRewriting(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
