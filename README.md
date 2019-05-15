@@ -13,6 +13,8 @@ A [Terraform][1] plugin for managing [FortiADC][2].
   * [`fortiadc_loadbalance_virtual_server`](#fortiadc_loadbalance_virtual_server)
   * [`fortiadc_loadbalance_content_routing`](#fortiadc_loadbalance_content_routing)
   * [`fortiadc_loadbalance_content_routing_condition`](#fortiadc_loadbalance_content_routing_condition)
+  * [`fortiadc_loadbalance_content_rewriting`](#fortiadc_loadbalance_content_rewriting)
+  * [`fortiadc_loadbalance_content_rewriting_condition`](#fortiadc_loadbalance_content_rewriting_condition)
 * [Requirements](#requirements)
 
 ## Installation
@@ -294,6 +296,101 @@ resource "fortiadc_loadbalance_content_routing_condition" "mycrcond" {
 | ----------------     | -----------------------          |
 | `id`                 | Content routing condition Mkey   |
 
+
+### `fortiadc_loadbalance_content_rewriting`
+
+A resource for managing content rewriting.
+
+#### Example
+
+```hcl
+resource "fortiadc_loadbalance_virtual_server" "myvirtualserver" {
+  name    = "myvirtualserver"
+  address = "192.168.11.10"
+  port    = 80
+  pool    = "my-rs-pool"
+
+  content_rewriting_enable = true
+  content_rewriting_list   = ["${fortiadc_loadbalance_content_rewriting.myrw.name}"]
+}
+
+resource "fortiadc_loadbalance_content_rewriting" "myrw" {
+  name = "my-content-rewriting"
+  action_type = "request"
+  action      = "send-403-forbidden"
+}
+```
+
+#### Arguments
+
+| Property                  | Description                             | Type        | Required    | Default                 |
+| ----------------          | -----------------------                 | -------     | ----------- | ----------              |
+| `name`                    | Content rewriting name                  | String      | true        |                         |
+| `action_type`             | Action type                             | String      | true        |                         |
+| `action`                  | Action                                  | String      | true        |                         |
+| `comment`                 | Comment                                 | String      | false       | ` `                     |
+| `host_match`              | Host header match                       | String      | false       | ` `                     |
+| `url_match`               | URL path match                          | String      | false       | ` `                     |
+| `referer_match`           | Referer header match                    | String      | false       | ` `                     |
+| `redirect`                | Redirect URL                            | String      | false       | ` `                     |
+| `location`                | HTTP location rewrite                   | String      | false       | ` `                     |
+| `header_name`             | Header name to add or remove            | String      | false       | ` `                     |
+
+#### Attributes
+
+| Property             | Description                                    |
+| ----------------     | -----------------------                        |
+| `id`                 | Content rewriting Mkey                         |
+
+
+### `fortiadc_loadbalance_content_rewriting_condition`
+
+A resource for managing content rewriting condition.
+
+#### Example
+
+```hcl
+resource "fortiadc_loadbalance_virtual_server" "myvirtualserver" {
+  name    = "myvirtualserver"
+  address = "192.168.11.10"
+  port    = 80
+  pool    = "my-rs-pool"
+
+  content_rewriting_enable = true
+  content_rewriting_list   = ["${fortiadc_loadbalance_content_rewriting.myrw.name}"]
+}
+
+resource "fortiadc_loadbalance_content_rewriting" "myrw" {
+  name = "my-content-rewriting"
+  action_type = "request"
+  action      = "send-403-forbidden"
+}
+
+resource "fortiadc_loadbalance_content_rewriting_condition" "myrwcond" {
+  content_routing = "${fortiadc_loadbalance_content_rewriting.myrw.name}"
+  object          = "http-host-header"
+  type            = "string"
+  content         = "myvhost.domain.loc"
+}
+```
+
+#### Arguments
+
+| Property           | Description                                 | Type        | Required    | Default                 |
+| ----------------   | -----------------------                     | -------     | ----------- | ----------              |
+| `content_rewriting`| Parent content rewriting name               | String      | true        |                         |
+| `object`           | Condition object                            | String      | true        |                         |
+| `type`             | Condition type                              | String      | true        |                         |
+| `content`          | Matching content                            | String      | true        |                         |
+| `reverse`          | Enable reverse                              | Bool        | false       | `false`                 |
+| `ignore_case`      | Ignore matching case                        | Bool        | false       | `true`                  |
+
+
+#### Attributes
+
+| Property             | Description                      |
+| ----------------     | -----------------------          |
+| `id`                 | Content rewriting condition Mkey   |
 
 ## Requirements
 * FortiADC >= 5.1
