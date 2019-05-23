@@ -2,7 +2,7 @@ language: go
 go:
   - "1.12"
 env:
-  - GO111MODULE=on
+  - GO111MODULE=on GOPROXY=https://proxy.golang.org
 deploy:
   provider: releases
   api_key:
