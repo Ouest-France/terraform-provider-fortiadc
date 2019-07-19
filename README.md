@@ -367,10 +367,10 @@ resource "fortiadc_loadbalance_content_rewriting" "myrw" {
 }
 
 resource "fortiadc_loadbalance_content_rewriting_condition" "myrwcond" {
-  content_routing = "${fortiadc_loadbalance_content_rewriting.myrw.name}"
-  object          = "http-host-header"
-  type            = "string"
-  content         = "myvhost.domain.loc"
+  content_rewriting = "${fortiadc_loadbalance_content_rewriting.myrw.name}"
+  object            = "http-host-header"
+  type              = "string"
+  content           = "myvhost.domain.loc"
 }
 ```
 
