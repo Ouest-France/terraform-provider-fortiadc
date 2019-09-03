@@ -86,6 +86,16 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Optional: true,
 				Default:  0,
 			},
+			"error_page": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "",
+			},
+			"error_msg": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "Server-unavailable!",
+			},
 			"interface": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
@@ -202,6 +212,8 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		Pool:                 d.Get("pool").(string),
 		ClientSSLProfile:     d.Get("client_ssl_profile").(string),
 		HTTP2HTTPS:           http2https,
+		ErrorMsg:             d.Get("error_msg").(string),
+		ErrorPage:            d.Get("error_page").(string),
 	}
 
 	err := client.LoadbalanceCreateVirtualServer(req)
@@ -269,6 +281,8 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 	d.Set("pool", rs.Pool)
 	d.Set("client_ssl_profile", rs.ClientSSLProfile)
 	d.Set("http_to_https", http2https)
+	d.Set("error_msg", rs.ErrorMsg)
+	d.Set("error_page", rs.ErrorPage)
 
 	port, err := strconv.ParseInt(strings.TrimSpace(rs.Port), 10, 64)
 	if err != nil {
@@ -374,6 +388,8 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		Pool:                 d.Get("pool").(string),
 		ClientSSLProfile:     d.Get("client_ssl_profile").(string),
 		HTTP2HTTPS:           http2https,
+		ErrorMsg:             d.Get("error_msg").(string),
+		ErrorPage:            d.Get("error_page").(string),
 	}
 
 	err := client.LoadbalanceUpdateVirtualServer(req)
