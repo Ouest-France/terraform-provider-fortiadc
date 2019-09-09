@@ -125,6 +125,11 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
+			"persistence": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "",
+			},
 		},
 	}
 }
@@ -212,6 +217,7 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		Pool:                 d.Get("pool").(string),
 		ClientSSLProfile:     d.Get("client_ssl_profile").(string),
 		HTTP2HTTPS:           http2https,
+		Persistence:          d.Get("persistence").(string),
 		ErrorMsg:             d.Get("error_msg").(string),
 		ErrorPage:            d.Get("error_page").(string),
 	}
@@ -281,6 +287,7 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 	d.Set("pool", rs.Pool)
 	d.Set("client_ssl_profile", rs.ClientSSLProfile)
 	d.Set("http_to_https", http2https)
+	d.Set("persistence", rs.Persistence)
 	d.Set("error_msg", rs.ErrorMsg)
 	d.Set("error_page", rs.ErrorPage)
 
@@ -388,6 +395,7 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		Pool:                 d.Get("pool").(string),
 		ClientSSLProfile:     d.Get("client_ssl_profile").(string),
 		HTTP2HTTPS:           http2https,
+		Persistence:          d.Get("persistence").(string),
 		ErrorMsg:             d.Get("error_msg").(string),
 		ErrorPage:            d.Get("error_page").(string),
 	}
