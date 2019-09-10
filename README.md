@@ -210,7 +210,8 @@ resource "fortiadc_loadbalance_virtual_server" "myvirtualserver" {
 | `client_ssl_profile`      | Client SSL profile                      | String      | false       | ` `                     |
 | `http_to_https`           | Redirect HTTP to HTTPS when L7          | Bool        | false       | `false`                 |
 | `error_msg`               | Error message on backend failure        | String      | false       | `Server-unavailable!`   |
-| `error_page`              | Error page on backend failure           | String      | false       | ``                 |
+| `error_page`              | Error page on backend failure           | String      | false       | ``                      |
+| `persistence`             | Persistence configuration               | String      | false       | ``                      |
 
 #### Attributes
 
