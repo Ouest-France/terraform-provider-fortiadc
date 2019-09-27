@@ -1,9 +1,9 @@
 name: Go
-on: [push]
+on: [pull_request]
 jobs:
 
   build:
-    name: Build
+    name: Build PR
     runs-on: ubuntu-latest
     steps:
 
@@ -18,3 +18,8 @@ jobs:
 
     - name: Build
       run: go build -o terraform-provider-fortiadc_${GITHUB_REF}
+      
+    - name: Lint
+      uses: actions-contrib/golangci-lint@master
+      with:
+        args: "run"
