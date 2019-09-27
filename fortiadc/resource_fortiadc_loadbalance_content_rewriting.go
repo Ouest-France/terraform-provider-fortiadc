@@ -126,44 +126,53 @@ func resourceFortiadcLoadbalanceContentRewritingRead(d *schema.ResourceData, m i
 		return err
 	}
 
-	d.Set("action_type", res.ActionType)
-	d.Set("action", res.Action)
-	d.Set("host_match", res.HostContent)
+	arguments := map[string]interface{}{
+		"action_type": res.ActionType,
+		"action":      res.Action,
+		"host_match":  res.HostContent,
+	}
 
 	if res.HeaderName == "header-name" {
-		d.Set("header_name", "")
+		arguments["header_name"] = ""
 	} else {
-		d.Set("header_name", res.HeaderName)
+		arguments["header_name"] = res.HeaderName
 	}
 
 	if res.Location == "http://" {
-		d.Set("location", "")
+		arguments["location"] = ""
 	} else {
-		d.Set("location", res.Location)
+		arguments["location"] = res.Location
 	}
 
 	if res.Redirect == "redirect" {
-		d.Set("redirect", "")
+		arguments["redirect"] = ""
 	} else {
-		d.Set("redirect", res.Redirect)
+		arguments["redirect"] = res.Redirect
 	}
 
 	if res.RefererContent == "http://" {
-		d.Set("referer_match", "")
+		arguments["referer_match"] = ""
 	} else {
-		d.Set("referer_match", res.RefererContent)
+		arguments["referer_match"] = res.RefererContent
 	}
 
 	if res.URLContent == "/url" {
-		d.Set("url_match", "")
+		arguments["url_match"] = ""
 	} else {
-		d.Set("url_match", res.URLContent)
+		arguments["url_match"] = res.URLContent
 	}
 
 	if res.Comments == "comments" {
-		d.Set("comment", "")
+		arguments["comment"] = ""
 	} else {
-		d.Set("comment", res.Comments)
+		arguments["comment"] = res.Comments
+	}
+
+	for arg, value := range arguments {
+		err = d.Set(arg, value)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

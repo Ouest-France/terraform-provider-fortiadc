@@ -83,10 +83,19 @@ func resourceFortiadcLoadbalanceContentRoutingConditionRead(d *schema.ResourceDa
 		reverse = true
 	}
 
-	d.Set("object", res.Object)
-	d.Set("type", res.Type)
-	d.Set("content", res.Content)
-	d.Set("reverse", reverse)
+	arguments := map[string]interface{}{
+		"object":  res.Object,
+		"type":    res.Type,
+		"content": res.Content,
+		"reverse": reverse,
+	}
+
+	for arg, value := range arguments {
+		err = d.Set(arg, value)
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
