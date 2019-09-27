@@ -1,9 +1,9 @@
-name: Go
+name: PR
 on: [pull_request]
 jobs:
 
   build:
-    name: Build PR
+    name: Build
     runs-on: ubuntu-latest
     steps:
 
