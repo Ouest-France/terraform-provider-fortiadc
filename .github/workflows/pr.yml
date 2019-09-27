@@ -19,7 +19,5 @@ jobs:
     - name: Build
       run: go build -o terraform-provider-fortiadc_${GITHUB_REF}
       
-    - name: Lint
-      uses: actions-contrib/golangci-lint@master
-      with:
-        args: "run"
+    - name: Run GolangCI-Lint Action by building from repository
+      uses: matoous/golangci-lint-action@v1
