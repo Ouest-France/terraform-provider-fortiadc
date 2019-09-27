@@ -19,5 +19,8 @@ jobs:
     - name: Build
       run: go build -o terraform-provider-fortiadc_${GITHUB_REF}
       
-    - name: Run GolangCI-Lint Action by building from repository
-      uses: matoous/golangci-lint-action@v1
+    - name: Setup Lint
+      run: curl -LO https://github.com/golangci/golangci-lint/releases/download/v1.19.1/golangci-lint-1.19.1-linux-amd64.tar.gz && tar -xf golangci-lint-1.19.1-linux-amd64.tar.gz
+      
+    - Name: Lint
+      run: golangci-lint-1.19.1-linux-amd64/golangci-lint run
