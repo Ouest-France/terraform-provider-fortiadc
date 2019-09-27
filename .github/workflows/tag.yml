@@ -29,9 +29,11 @@ jobs:
     - name: Lint
       run: golangci-lint-1.19.1-linux-amd64/golangci-lint run
       
-    - name: Release
-      uses: softprops/action-gh-release@v1
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v1-release
       with:
-        files: terraform-provider-fortiadc_*
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: terraform-provider-fortiadc_${{ github.ref }}
+        asset_name: terraform-provider-fortiadc_${{ github.ref }}
+        tag: ${{ github.ref }}
+        overwrite: true
