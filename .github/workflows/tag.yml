@@ -32,6 +32,6 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: terraform-provider-fortiadc_${GITHUB_REF}
+        files: terraform-provider-fortiadc_*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
