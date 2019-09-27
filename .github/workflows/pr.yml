@@ -22,5 +22,5 @@ jobs:
     - name: Setup Lint
       run: curl -LO https://github.com/golangci/golangci-lint/releases/download/v1.19.1/golangci-lint-1.19.1-linux-amd64.tar.gz && tar -xf golangci-lint-1.19.1-linux-amd64.tar.gz
       
-    - Name: Lint
+    - name: Lint
       run: golangci-lint-1.19.1-linux-amd64/golangci-lint run
