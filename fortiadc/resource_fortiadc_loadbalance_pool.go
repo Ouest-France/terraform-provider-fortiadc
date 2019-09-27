@@ -109,16 +109,25 @@ func resourceFortiadcLoadbalancePoolRead(d *schema.ResourceData, m interface{}) 
 	if len(hcList) > 1 {
 		hcList = hcList[:len(hcList)-1]
 	}
-	if healtcheckEnable == false {
+	if !healtcheckEnable {
 		hcList = []string{}
 	}
 
-	d.Set("name", res.Mkey)
-	d.Set("pool_type", res.PoolType)
-	d.Set("healtcheck_enable", healtcheckEnable)
-	d.Set("healtcheck_relationship", res.HealthCheckRelationship)
-	d.Set("healtcheck_list", hcList)
-	d.Set("real_server_ssl_profile", res.RsProfile)
+	arguments := map[string]interface{}{
+		"name":                    res.Mkey,
+		"pool_type":               res.PoolType,
+		"healtcheck_enable":       healtcheckEnable,
+		"healtcheck_relationship": res.HealthCheckRelationship,
+		"healtcheck_list":         hcList,
+		"real_server_ssl_profile": res.RsProfile,
+	}
+
+	for arg, value := range arguments {
+		err = d.Set(arg, value)
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }

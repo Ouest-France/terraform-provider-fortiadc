@@ -114,11 +114,20 @@ func resourceFortiadcLoadbalanceContentRewritingConditionRead(d *schema.Resource
 		ignoreCase = true
 	}
 
-	d.Set("object", res.Object)
-	d.Set("type", res.Type)
-	d.Set("content", res.Content)
-	d.Set("reverse", reverse)
-	d.Set("ignore_case", ignoreCase)
+	arguments := map[string]interface{}{
+		"object":      res.Object,
+		"type":        res.Type,
+		"content":     res.Content,
+		"reverse":     reverse,
+		"ignore_case": ignoreCase,
+	}
+
+	for arg, value := range arguments {
+		err = d.Set(arg, value)
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }

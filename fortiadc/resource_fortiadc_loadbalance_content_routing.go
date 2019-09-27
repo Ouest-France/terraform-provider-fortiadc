@@ -86,11 +86,20 @@ func resourceFortiadcLoadbalanceContentRoutingRead(d *schema.ResourceData, m int
 		return err
 	}
 
-	d.Set("type", res.Type)
-	d.Set("comment", res.Comments)
-	d.Set("ipv4", res.IP)
-	d.Set("ipv6", res.IP6)
-	d.Set("pool", res.Pool)
+	arguments := map[string]interface{}{
+		"type":    res.Type,
+		"comment": res.Comments,
+		"ipv4":    res.IP,
+		"ipv6":    res.IP6,
+		"pool":    res.Pool,
+	}
+
+	for arg, value := range arguments {
+		err = d.Set(arg, value)
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }

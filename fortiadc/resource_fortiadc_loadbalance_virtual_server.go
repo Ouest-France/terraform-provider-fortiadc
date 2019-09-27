@@ -259,7 +259,7 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 	if len(crList) > 1 {
 		crList = crList[:len(crList)-1]
 	}
-	if contentRouting == false {
+	if !contentRouting {
 		crList = []string{}
 	}
 
@@ -267,47 +267,56 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 	if len(rwList) > 1 {
 		rwList = rwList[:len(rwList)-1]
 	}
-	if contentRewriting == false {
+	if !contentRewriting {
 		rwList = []string{}
 	}
 
-	d.Set("status", rs.Status)
-	d.Set("type", rs.Type)
-	d.Set("address_type", rs.AddrType)
-	d.Set("address", rs.Address)
-	d.Set("packet_forward_method", rs.PacketFwdMethod)
-	d.Set("nat_source_pool", strings.TrimSpace(rs.SrcPool))
-	d.Set("content_routing_enable", contentRouting)
-	d.Set("content_routing_list", crList)
-	d.Set("content_rewriting_enable", contentRewriting)
-	d.Set("content_rewriting_list", rwList)
-	d.Set("interface", rs.Interface)
-	d.Set("profile", rs.Profile)
-	d.Set("method", rs.Method)
-	d.Set("pool", rs.Pool)
-	d.Set("client_ssl_profile", rs.ClientSSLProfile)
-	d.Set("http_to_https", http2https)
-	d.Set("persistence", rs.Persistence)
-	d.Set("error_msg", rs.ErrorMsg)
-	d.Set("error_page", rs.ErrorPage)
+	arguments := map[string]interface{}{
+		"status":                   rs.Status,
+		"type":                     rs.Type,
+		"address_type":             rs.AddrType,
+		"address":                  rs.Address,
+		"packet_forward_method":    rs.PacketFwdMethod,
+		"nat_source_pool":          strings.TrimSpace(rs.SrcPool),
+		"content_routing_enable":   contentRouting,
+		"content_routing_list":     crList,
+		"content_rewriting_enable": contentRewriting,
+		"content_rewriting_list":   rwList,
+		"interface":                rs.Interface,
+		"profile":                  rs.Profile,
+		"method":                   rs.Method,
+		"pool":                     rs.Pool,
+		"client_ssl_profile":       rs.ClientSSLProfile,
+		"http_to_https":            http2https,
+		"persistence":              rs.Persistence,
+		"error_msg":                rs.ErrorMsg,
+		"error_page":               rs.ErrorPage,
+	}
 
 	port, err := strconv.ParseInt(strings.TrimSpace(rs.Port), 10, 64)
 	if err != nil {
 		return err
 	}
-	d.Set("port", port)
+	arguments["port"] = port
 
 	connectionLimit, err := strconv.ParseInt(rs.ConnectionLimit, 10, 64)
 	if err != nil {
 		return err
 	}
-	d.Set("connection_limit", connectionLimit)
+	arguments["connection_limit"] = connectionLimit
 
 	connectionRateLimit, err := strconv.ParseInt(rs.ConnectionRateLimit, 10, 64)
 	if err != nil {
 		return err
 	}
-	d.Set("connection_rate_limit", connectionRateLimit)
+	arguments["connection_rate_limit"] = connectionRateLimit
+
+	for arg, value := range arguments {
+		err = d.Set(arg, value)
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }

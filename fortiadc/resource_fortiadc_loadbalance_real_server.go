@@ -64,10 +64,19 @@ func resourceFortiadcLoadbalanceRealServerRead(d *schema.ResourceData, m interfa
 		return err
 	}
 
-	d.Set("name", rs.Mkey)
-	d.Set("address", rs.Address)
-	d.Set("address6", rs.Address6)
-	d.Set("status", rs.Status)
+	arguments := map[string]interface{}{
+		"name":     rs.Mkey,
+		"address":  rs.Address,
+		"address6": rs.Address6,
+		"status":   rs.Status,
+	}
+
+	for arg, value := range arguments {
+		err = d.Set(arg, value)
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }

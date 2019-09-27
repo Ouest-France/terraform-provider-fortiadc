@@ -119,50 +119,59 @@ func resourceFortiadcLoadbalancePoolMemberRead(d *schema.ResourceData, m interfa
 		return err
 	}
 
-	d.Set("name", res.RealServerID)
-	d.Set("status", res.Status)
+	arguments := map[string]interface{}{
+		"name":   res.RealServerID,
+		"status": res.Status,
+	}
 
 	port, err := strconv.ParseInt(res.Port, 10, 64)
 	if err != nil {
 		return err
 	}
-	d.Set("port", port)
+	arguments["port"] = port
 
 	weight, err := strconv.ParseInt(res.Weight, 10, 64)
 	if err != nil {
 		return err
 	}
-	d.Set("weight", weight)
+	arguments["weight"] = weight
 
 	connLimit, err := strconv.ParseInt(res.Connlimit, 10, 64)
 	if err != nil {
 		return err
 	}
-	d.Set("conn_limit", connLimit)
+	arguments["conn_limit"] = connLimit
 
 	recover, err := strconv.ParseInt(res.Recover, 10, 64)
 	if err != nil {
 		return err
 	}
-	d.Set("recover", recover)
+	arguments["recover"] = recover
 
 	warmup, err := strconv.ParseInt(res.Warmup, 10, 64)
 	if err != nil {
 		return err
 	}
-	d.Set("warmup", warmup)
+	arguments["warmup"] = warmup
 
 	warmrate, err := strconv.ParseInt(res.Warmrate, 10, 64)
 	if err != nil {
 		return err
 	}
-	d.Set("warmrate", warmrate)
+	arguments["warmrate"] = warmrate
 
 	connectionRateLimit, err := strconv.ParseInt(res.ConnectionRateLimit, 10, 64)
 	if err != nil {
 		return err
 	}
-	d.Set("conn_rate_limit", connectionRateLimit)
+	arguments["conn_rate_limit"] = connectionRateLimit
+
+	for arg, value := range arguments {
+		err = d.Set(arg, value)
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
