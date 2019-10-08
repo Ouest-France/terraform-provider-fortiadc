@@ -47,10 +47,10 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Optional: true,
 				Default:  "NAT",
 			},
-			"nat_source_pool": &schema.Schema{
-				Type:     schema.TypeString,
+			"source_pool_list": &schema.Schema{
+				Type:     schema.TypeList,
 				Optional: true,
-				Default:  "",
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"port": &schema.Schema{
 				Type:     schema.TypeInt,
@@ -151,6 +151,13 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		}
 	}
 
+	spList := []string{}
+	if raw, ok := d.GetOk("source_pool_list"); ok {
+		for _, v := range raw.([]interface{}) {
+			spList = append(spList, v.(string))
+		}
+	}
+
 	// Content routing
 	if d.Get("content_routing_enable").(bool) && len(crList) == 0 {
 		return errors.New("content_routing_list cannot be empty when content_routing_enable is set to true")
@@ -177,19 +184,19 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		http2https = ""
 	}
 
-	req := gofortiadc.LoadbalanceVirtualServerReq{
+	req := gofortiadc.LoadbalanceVirtualServer{
 		Status:               d.Get("status").(string),
 		Type:                 d.Get("type").(string),
 		AddrType:             d.Get("address_type").(string),
 		Address:              d.Get("address").(string),
 		Address6:             "::",
 		PacketFwdMethod:      d.Get("packet_forward_method").(string),
-		SrcPool:              d.Get("nat_source_pool").(string),
+		SourcePoolList:       strings.Join(spList, " "),
 		Port:                 fmt.Sprintf("%d", d.Get("port").(int)),
 		ConnectionLimit:      fmt.Sprintf("%d", d.Get("connection_limit").(int)),
-		ContentRouting:       contentRouting,
+		ContentRouting:       boolToEnable(d.Get("content_routing_enable").(bool)),
 		ContentRoutingList:   strings.Join(crList, " "),
-		ContentRewriting:     contentRewriting,
+		ContentRewriting:     boolToEnable(d.Get("content_rewriting_enable").(bool)),
 		ContentRewritingList: strings.Join(rwList, " "),
 		Warmup:               "0",
 		Warmrate:             "10",
@@ -243,13 +250,21 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		rwList = []string{}
 	}
 
+	spList := []string{}
+	if len(rs.SourcePoolList) != 0 {
+		spList = strings.Split(rs.SourcePoolList, " ")
+	}
+	if len(spList) > 1 {
+		spList = spList[:len(spList)-1]
+	}
+
 	arguments := map[string]interface{}{
 		"status":                   rs.Status,
 		"type":                     rs.Type,
 		"address_type":             rs.AddrType,
 		"address":                  rs.Address,
 		"packet_forward_method":    rs.PacketFwdMethod,
-		"nat_source_pool":          strings.TrimSpace(rs.SrcPool),
+		"source_pool_list":         spList,
 		"content_routing_enable":   contentRouting,
 		"content_routing_list":     crList,
 		"content_rewriting_enable": contentRewriting,
@@ -310,6 +325,13 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		}
 	}
 
+	spList := []string{}
+	if raw, ok := d.GetOk("source_pool_list"); ok {
+		for _, v := range raw.([]interface{}) {
+			spList = append(spList, v.(string))
+		}
+	}
+
 	// Content routing
 	if d.Get("content_routing_enable").(bool) && len(crList) == 0 {
 		return errors.New("content_routing_list cannot be empty when content_routing_enable is set to true")
@@ -328,37 +350,24 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		return errors.New("content_rewriting_list must be empty when content_rewriting_enable is set to false")
 	}
 
-	contentRewriting := "disable"
-	if d.Get("content_rewriting_enable").(bool) {
-		contentRewriting = "enable"
-	}
-
-	// Packet forward
-	if d.Get("packet_forward_method").(string) != "FullNAT" && len(d.Get("nat_source_pool").(string)) > 0 {
-		return errors.New("nat_source_pool cannot be defined when packet_forward_method is not FullNAT")
-	}
-
-	http2https := "disable"
-	if d.Get("http_to_https").(bool) {
-		http2https = "enable"
-	}
+	http2https := boolToEnable(d.Get("http_to_https").(bool))
 	if len(d.Get("client_ssl_profile").(string)) == 0 {
 		http2https = ""
 	}
 
-	req := gofortiadc.LoadbalanceVirtualServerReq{
+	req := gofortiadc.LoadbalanceVirtualServer{
 		Status:               d.Get("status").(string),
 		Type:                 d.Get("type").(string),
 		AddrType:             d.Get("address_type").(string),
 		Address:              d.Get("address").(string),
 		Address6:             "::",
 		PacketFwdMethod:      d.Get("packet_forward_method").(string),
-		SrcPool:              d.Get("nat_source_pool").(string),
+		SourcePoolList:       strings.Join(spList, " "),
 		Port:                 fmt.Sprintf("%d", d.Get("port").(int)),
 		ConnectionLimit:      fmt.Sprintf("%d", d.Get("connection_limit").(int)),
-		ContentRouting:       contentRouting,
+		ContentRouting:       boolToEnable(d.Get("content_routing_enable").(bool)),
 		ContentRoutingList:   strings.Join(crList, " "),
-		ContentRewriting:     contentRewriting,
+		ContentRewriting:     boolToEnable(d.Get("content_rewriting_enable").(bool)),
 		ContentRewritingList: strings.Join(rwList, " "),
 		Warmup:               "0",
 		Warmrate:             "10",
