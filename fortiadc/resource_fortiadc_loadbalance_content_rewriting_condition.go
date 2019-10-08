@@ -62,23 +62,13 @@ func resourceFortiadcLoadbalanceContentRewritingCondition() *schema.Resource {
 func resourceFortiadcLoadbalanceContentRewritingConditionCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*gofortiadc.Client)
 
-	reverse := "disable"
-	if d.Get("reverse").(bool) {
-		reverse = "enable"
-	}
-
-	ignoreCase := "disable"
-	if d.Get("ignore_case").(bool) {
-		ignoreCase = "enable"
-	}
-
 	req := gofortiadc.LoadbalanceContentRewritingCondition{
 		Mkey:       "",
 		Object:     d.Get("object").(string),
 		Type:       d.Get("type").(string),
 		Content:    d.Get("content").(string),
-		Reverse:    reverse,
-		Ignorecase: ignoreCase,
+		Reverse:    boolToEnable(d.Get("reverse").(bool)),
+		Ignorecase: boolToEnable(d.Get("ignore_case").(bool)),
 	}
 
 	err := client.LoadbalanceCreateContentRewritingCondition(d.Get("content_rewriting").(string), req)
@@ -104,22 +94,12 @@ func resourceFortiadcLoadbalanceContentRewritingConditionRead(d *schema.Resource
 		return err
 	}
 
-	reverse := false
-	if res.Reverse == "enable" {
-		reverse = true
-	}
-
-	ignoreCase := false
-	if d.Get("ignore_case").(bool) {
-		ignoreCase = true
-	}
-
 	arguments := map[string]interface{}{
 		"object":      res.Object,
 		"type":        res.Type,
 		"content":     res.Content,
-		"reverse":     reverse,
-		"ignore_case": ignoreCase,
+		"reverse":     enableToBool(res.Reverse),
+		"ignore_case": d.Get("ignore_case").(bool),
 	}
 
 	for arg, value := range arguments {
@@ -135,23 +115,13 @@ func resourceFortiadcLoadbalanceContentRewritingConditionRead(d *schema.Resource
 func resourceFortiadcLoadbalanceContentRewritingConditionUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*gofortiadc.Client)
 
-	reverse := "disable"
-	if d.Get("reverse").(bool) {
-		reverse = "enable"
-	}
-
-	ignoreCase := "disable"
-	if d.Get("ignore_case").(bool) {
-		ignoreCase = "enable"
-	}
-
 	req := gofortiadc.LoadbalanceContentRewritingCondition{
 		Mkey:       d.Id(),
 		Object:     d.Get("object").(string),
 		Type:       d.Get("type").(string),
 		Content:    d.Get("content").(string),
-		Reverse:    reverse,
-		Ignorecase: ignoreCase,
+		Reverse:    boolToEnable(d.Get("reverse").(bool)),
+		Ignorecase: boolToEnable(d.Get("ignore_case").(bool)),
 	}
 
 	err := client.LoadbalanceUpdateContentRewritingCondition(d.Get("content_rewriting").(string), req)

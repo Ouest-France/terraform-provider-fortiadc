@@ -160,11 +160,6 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		return errors.New("content_routing_list must be empty when content_routing_enable is set to false")
 	}
 
-	contentRouting := "disable"
-	if d.Get("content_routing_enable").(bool) {
-		contentRouting = "enable"
-	}
-
 	// Content rewriting
 	if d.Get("content_rewriting_enable").(bool) && len(rwList) == 0 {
 		return errors.New("content_routing_list cannot be empty when content_rewriting_enable is set to true")
@@ -172,16 +167,6 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 
 	if !d.Get("content_rewriting_enable").(bool) && len(rwList) > 0 {
 		return errors.New("content_rewriting_list must be empty when content_rewriting_enable is set to false")
-	}
-
-	contentRewriting := "disable"
-	if d.Get("content_rewriting_enable").(bool) {
-		contentRewriting = "enable"
-	}
-
-	// Packet forward
-	if d.Get("packet_forward_method").(string) != "FullNAT" && len(d.Get("nat_source_pool").(string)) > 0 {
-		return errors.New("nat_source_pool cannot be defined when packet_forward_method is not FullNAT")
 	}
 
 	http2https := "disable"
@@ -240,21 +225,7 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		return err
 	}
 
-	contentRouting := false
-	if rs.ContentRouting == "enable" {
-		contentRouting = true
-	}
-
-	contentRewriting := false
-	if rs.ContentRewriting == "enable" {
-		contentRewriting = true
-	}
-
-	http2https := false
-	if rs.HTTP2HTTPS == "enable" {
-		http2https = true
-	}
-
+	contentRouting := enableToBool(rs.ContentRouting)
 	crList := strings.Split(rs.ContentRoutingList, " ")
 	if len(crList) > 1 {
 		crList = crList[:len(crList)-1]
@@ -263,6 +234,7 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		crList = []string{}
 	}
 
+	contentRewriting := enableToBool(rs.ContentRewriting)
 	rwList := strings.Split(rs.ContentRewritingList, " ")
 	if len(rwList) > 1 {
 		rwList = rwList[:len(rwList)-1]
@@ -287,7 +259,7 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		"method":                   rs.Method,
 		"pool":                     rs.Pool,
 		"client_ssl_profile":       rs.ClientSSLProfile,
-		"http_to_https":            http2https,
+		"http_to_https":            enableToBool(rs.HTTP2HTTPS),
 		"persistence":              rs.Persistence,
 		"error_msg":                rs.ErrorMsg,
 		"error_page":               rs.ErrorPage,
@@ -345,11 +317,6 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 
 	if !d.Get("content_routing_enable").(bool) && len(crList) > 0 {
 		return errors.New("content_routing_list must be empty when content_routing_enable is set to false")
-	}
-
-	contentRouting := "disable"
-	if d.Get("content_routing_enable").(bool) {
-		contentRouting = "enable"
 	}
 
 	// Content rewriting

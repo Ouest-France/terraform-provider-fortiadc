@@ -68,15 +68,10 @@ func resourceFortiadcLoadbalancePoolCreate(d *schema.ResourceData, m interface{}
 		return errors.New("healtcheck_list must be empty when healtcheck_enable is set to false")
 	}
 
-	healtcheckEnable := "disable"
-	if d.Get("healtcheck_enable").(bool) {
-		healtcheckEnable = "enable"
-	}
-
-	req := gofortiadc.LoadbalancePoolReq{
+	req := gofortiadc.LoadbalancePool{
 		Mkey:                    d.Get("name").(string),
 		PoolType:                d.Get("pool_type").(string),
-		HealthCheck:             healtcheckEnable,
+		HealthCheck:             boolToEnable(d.Get("healtcheck_enable").(bool)),
 		HealthCheckRelationship: d.Get("healtcheck_relationship").(string),
 		HealthCheckList:         strings.Join(hcList, " "),
 		RsProfile:               d.Get("real_server_ssl_profile").(string),
@@ -100,10 +95,7 @@ func resourceFortiadcLoadbalancePoolRead(d *schema.ResourceData, m interface{}) 
 		return err
 	}
 
-	healtcheckEnable := false
-	if res.HealthCheck == "enable" {
-		healtcheckEnable = true
-	}
+	healtcheckEnable := enableToBool(res.HealthCheck)
 
 	hcList := strings.Split(res.HealthCheckList, " ")
 	if len(hcList) > 1 {
@@ -150,15 +142,10 @@ func resourceFortiadcLoadbalancePoolUpdate(d *schema.ResourceData, m interface{}
 		return errors.New("healtcheck_list must be empty when healtcheck_enable is set to false")
 	}
 
-	healtcheckEnable := "disable"
-	if d.Get("healtcheck_enable").(bool) {
-		healtcheckEnable = "enable"
-	}
-
-	req := gofortiadc.LoadbalancePoolReq{
+	req := gofortiadc.LoadbalancePool{
 		Mkey:                    d.Get("name").(string),
 		PoolType:                d.Get("pool_type").(string),
-		HealthCheck:             healtcheckEnable,
+		HealthCheck:             boolToEnable(d.Get("healtcheck_enable").(bool)),
 		HealthCheckRelationship: d.Get("healtcheck_relationship").(string),
 		HealthCheckList:         strings.Join(hcList, " "),
 		RsProfile:               d.Get("real_server_ssl_profile").(string),
