@@ -42,17 +42,12 @@ func resourceFortiadcLoadbalanceContentRoutingCondition() *schema.Resource {
 func resourceFortiadcLoadbalanceContentRoutingConditionCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*gofortiadc.Client)
 
-	reverse := "disable"
-	if d.Get("reverse").(bool) {
-		reverse = "enable"
-	}
-
 	req := gofortiadc.LoadbalanceContentRoutingCondition{
 		Mkey:    "",
 		Object:  d.Get("object").(string),
 		Type:    d.Get("type").(string),
 		Content: d.Get("content").(string),
-		Reverse: reverse,
+		Reverse: boolToEnable(d.Get("reverse").(bool)),
 	}
 
 	err := client.LoadbalanceCreateContentRoutingCondition(d.Get("content_routing").(string), req)
@@ -78,16 +73,11 @@ func resourceFortiadcLoadbalanceContentRoutingConditionRead(d *schema.ResourceDa
 		return err
 	}
 
-	reverse := false
-	if res.Reverse == "enable" {
-		reverse = true
-	}
-
 	arguments := map[string]interface{}{
 		"object":  res.Object,
 		"type":    res.Type,
 		"content": res.Content,
-		"reverse": reverse,
+		"reverse": enableToBool(res.Reverse),
 	}
 
 	for arg, value := range arguments {
@@ -103,17 +93,12 @@ func resourceFortiadcLoadbalanceContentRoutingConditionRead(d *schema.ResourceDa
 func resourceFortiadcLoadbalanceContentRoutingConditionUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*gofortiadc.Client)
 
-	reverse := "disable"
-	if d.Get("reverse").(bool) {
-		reverse = "enable"
-	}
-
 	req := gofortiadc.LoadbalanceContentRoutingCondition{
 		Mkey:    d.Id(),
 		Object:  d.Get("object").(string),
 		Type:    d.Get("type").(string),
 		Content: d.Get("content").(string),
-		Reverse: reverse,
+		Reverse: boolToEnable(d.Get("reverse").(bool)),
 	}
 
 	err := client.LoadbalanceUpdateContentRoutingCondition(d.Get("content_routing").(string), req)
