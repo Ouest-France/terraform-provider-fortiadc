@@ -130,6 +130,11 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Optional: true,
 				Default:  "",
 			},
+			"traffic_log": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
 		},
 	}
 }
@@ -212,6 +217,7 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		Persistence:          d.Get("persistence").(string),
 		ErrorMsg:             d.Get("error_msg").(string),
 		ErrorPage:            d.Get("error_page").(string),
+		TrafficLog:           boolToEnable(d.Get("traffic_log").(bool)),
 	}
 
 	err := client.LoadbalanceCreateVirtualServer(req)
@@ -278,6 +284,7 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		"persistence":              rs.Persistence,
 		"error_msg":                rs.ErrorMsg,
 		"error_page":               rs.ErrorPage,
+		"traffic_log":              enableToBool(rs.TrafficLog),
 	}
 
 	port, err := strconv.ParseInt(strings.TrimSpace(rs.Port), 10, 64)
@@ -383,6 +390,7 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		Persistence:          d.Get("persistence").(string),
 		ErrorMsg:             d.Get("error_msg").(string),
 		ErrorPage:            d.Get("error_page").(string),
+		TrafficLog:           boolToEnable(d.Get("traffic_log").(bool)),
 	}
 
 	err := client.LoadbalanceUpdateVirtualServer(req)
