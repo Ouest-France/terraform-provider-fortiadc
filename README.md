@@ -212,6 +212,7 @@ resource "fortiadc_loadbalance_virtual_server" "myvirtualserver" {
 | `error_msg`               | Error message on backend failure        | String      | false       | `Server-unavailable!`   |
 | `error_page`              | Error page on backend failure           | String      | false       | ``                      |
 | `persistence`             | Persistence configuration               | String      | false       | ``                      |
+| `traffic_log`             | Enable traffic logging                  | Bool        | false       | `false`                 |
 
 #### Attributes
 
