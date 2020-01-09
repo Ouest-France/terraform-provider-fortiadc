@@ -197,7 +197,7 @@ resource "fortiadc_loadbalance_virtual_server" "myvirtualserver" {
 | `address_type`            | Address type (ipv4/ipv6)                | String      | true        | `ipv4`                  |
 | `address`                 | Address                                 | String      | true        |                         |
 | `packet_forward_method`   | Packet forwarding method (NAT/FullNAT)  | String      | false       | `NAT`                   |
-| `nat_source_pool`         | NAT source pool                         | String      | false       | ` `                     |
+| `source_pool_list`        | NAT source pool                         | ListString  | false       | `[]`                    |
 | `port`                    | Port                                    | Int         | true        |                         |
 | `connection_limit`        | Connection limit                        | Int         | false       | `0`                     |
 | `content_routing_enable`  | Enable content routing                  | Bool        | false       | `false`                 |
