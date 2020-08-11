@@ -6,6 +6,14 @@ The FortiADC provider is used to interact with the resources supported by [Forti
 
 ```hcl
 # Provider configuration
+terraform {
+  required_providers {
+    fortiadc = {
+      source  = "Ouest-France/fortiadc"
+    }
+  }
+}
+
 provider "fortiadc" {
   address  = "https://fortiadc.mydomain.com"
   user     = "myuser"
