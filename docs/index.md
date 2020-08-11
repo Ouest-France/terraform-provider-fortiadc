@@ -31,3 +31,7 @@ resource "fortiadc_loadbalance_real_server" "myrealserver" {
 * `password` - (Required) This is the FortiADC password to access the API.
 
 * `insecure` - (Optional) This enable or disable TLS certificate verification, defaults to `false`.
+
+## Requirements
+
+* FortiADC >= 5.1
