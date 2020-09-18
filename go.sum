@@ -44,6 +44,8 @@ github.com/ChrisTrenkamp/goxpath v0.0.0-20190607011252-c5096ec8773d/go.mod h1:nu
 github.com/NYTimes/gziphandler v0.0.0-20170623195520-56545f4a5d46/go.mod h1:3wb06e3pkSAbeQ52E9H9iFoQsEEwGN64994WTCIhntQ=
 github.com/Ouest-France/gofortiadc v0.1.0 h1:/is/uwnSdNixnDb1Xd4FARy6dPUoQNf5BOM3OS1FXz4=
 github.com/Ouest-France/gofortiadc v0.1.0/go.mod h1:vI3Koq2UDtlZV1ZEmpAAIwcvbd5zdLXlna4YSe20/pc=
+github.com/Ouest-France/gofortiadc v0.1.1 h1:owu5v0Nkvy2MLdCSrWeoGYnhz+7/q8Y8P/cby4pPRNU=
+github.com/Ouest-France/gofortiadc v0.1.1/go.mod h1:1n2hla6zwvkKxXtdUO7I5L6RMApiN/1FjrE0okNIiB4=
 github.com/PuerkitoBio/purell v1.0.0/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
 github.com/PuerkitoBio/urlesc v0.0.0-20160726150825-5bd2802263f2/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
 github.com/QcloudApi/qcloud_sign_golang v0.0.0-20141224014652-e4130a326409/go.mod h1:1pk82RBxDY/JZnPQrtqHlUFfCctgdorsd9M06fMynOM=
