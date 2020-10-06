@@ -42,4 +42,4 @@ resource "fortiadc_loadbalance_real_server" "myrealserver" {
 
 ## Requirements
 
-* FortiADC >= 5.1
+* FortiADC v5 >= 5.4
