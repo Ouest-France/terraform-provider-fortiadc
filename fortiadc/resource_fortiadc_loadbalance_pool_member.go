@@ -1,6 +1,7 @@
 package fortiadc
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -115,6 +116,11 @@ func resourceFortiadcLoadbalancePoolMemberRead(d *schema.ResourceData, m interfa
 	client := m.(*gofortiadc.Client)
 
 	res, err := client.LoadbalanceGetPoolMember(d.Get("pool").(string), d.Id())
+	if errors.Is(err, gofortiadc.ErrNotFound) {
+		// If not found, remove from state
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}

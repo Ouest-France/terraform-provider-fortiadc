@@ -91,6 +91,11 @@ func resourceFortiadcLoadbalancePoolRead(d *schema.ResourceData, m interface{}) 
 	client := m.(*gofortiadc.Client)
 
 	res, err := client.LoadbalanceGetPool(d.Id())
+	if errors.Is(err, gofortiadc.ErrNotFound) {
+		// If not found, remove from state
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}

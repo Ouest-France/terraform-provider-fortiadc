@@ -234,6 +234,11 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 	client := m.(*gofortiadc.Client)
 
 	rs, err := client.LoadbalanceGetVirtualServer(d.Id())
+	if errors.Is(err, gofortiadc.ErrNotFound) {
+		// If not found, remove from state
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}

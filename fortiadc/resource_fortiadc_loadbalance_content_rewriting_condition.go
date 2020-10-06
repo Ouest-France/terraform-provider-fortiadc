@@ -1,6 +1,8 @@
 package fortiadc
 
 import (
+	"errors"
+
 	"github.com/Ouest-France/gofortiadc"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
@@ -90,6 +92,11 @@ func resourceFortiadcLoadbalanceContentRewritingConditionRead(d *schema.Resource
 	client := m.(*gofortiadc.Client)
 
 	res, err := client.LoadbalanceGetContentRewritingCondition(d.Get("content_rewriting").(string), d.Id())
+	if errors.Is(err, gofortiadc.ErrNotFound) {
+		// If not found, remove from state
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
