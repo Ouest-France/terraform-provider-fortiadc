@@ -1,6 +1,8 @@
 package fortiadc
 
 import (
+	"errors"
+
 	"github.com/Ouest-France/gofortiadc"
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -69,6 +71,11 @@ func resourceFortiadcLoadbalanceContentRoutingConditionRead(d *schema.ResourceDa
 	client := m.(*gofortiadc.Client)
 
 	res, err := client.LoadbalanceGetContentRoutingCondition(d.Get("content_routing").(string), d.Id())
+	if errors.Is(err, gofortiadc.ErrNotFound) {
+		// If not found, remove from state
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
