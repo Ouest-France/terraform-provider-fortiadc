@@ -28,7 +28,7 @@ resource "fortiadc_loadbalance_content_routing_condition" "mycrcond" {
 
 * `content_routing` - (Required) Parent content routing name.
 * `object` - (Required) Matching object type (ex: http-host-header).
-* `type` - (Required) Matching comparison (ex: string).
+* `type` - (Required) Matching comparison (ex: string or regular-expression).
 * `content` - (Required) Matching content.
 * `reverse` - (Optional) Enable reverse. Defaults to `false`.
 
