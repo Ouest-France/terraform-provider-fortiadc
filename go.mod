@@ -4,5 +4,5 @@ go 1.12
 
 require (
 	github.com/Ouest-France/gofortiadc v0.2.0
-	github.com/hashicorp/terraform v0.14.2
+	github.com/hashicorp/terraform-plugin-sdk v1.7.0
 )

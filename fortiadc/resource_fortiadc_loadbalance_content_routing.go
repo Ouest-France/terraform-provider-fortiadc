@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/Ouest-France/gofortiadc"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceFortiadcLoadbalanceContentRouting() *schema.Resource {

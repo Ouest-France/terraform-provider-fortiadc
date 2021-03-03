@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/Ouest-France/terraform-provider-fortiadc/fortiadc"
 
-	"github.com/hashicorp/terraform/plugin"
-	"github.com/hashicorp/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/plugin"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 func main() {
