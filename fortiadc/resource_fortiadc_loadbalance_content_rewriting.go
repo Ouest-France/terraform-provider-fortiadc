@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	"github.com/Ouest-France/gofortiadc"
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func resourceFortiadcLoadbalanceContentRewriting() *schema.Resource {
