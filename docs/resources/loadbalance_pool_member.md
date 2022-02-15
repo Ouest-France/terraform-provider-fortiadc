@@ -41,3 +41,11 @@ resource "fortiadc_loadbalance_pool_member" "mymember" {
 ## Attribute Reference
 
 * `id` - Member Mkey (internal ID).
+
+## Import
+
+Pool members can be imported using their pool and name joined by a dot:
+
+```
+$ terraform import fortiadc_loadbalance_pool_member.mymember mypool.mymember
+```

@@ -23,3 +23,11 @@ resource "fortiadc_loadbalance_real_server" "myrealserver" {
 ## Attribute Reference
 
 * `id` - Real server Mkey (internal ID).
+
+## Import
+
+Real servers can be imported using their name:
+
+```
+$ terraform import fortiadc_loadbalance_real_server.myrealserver myrealserver
+```

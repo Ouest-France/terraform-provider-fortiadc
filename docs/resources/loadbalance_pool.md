@@ -24,3 +24,11 @@ resource "fortiadc_loadbalance_pool" "mypool" {
 ## Attribute Reference
 
 * `id` - Pool Mkey (internal ID).
+
+## Import
+
+Pools can be imported using their name:
+
+```
+$ terraform import fortiadc_loadbalance_pool.mypool mypool
+```

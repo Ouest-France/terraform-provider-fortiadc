@@ -14,24 +14,27 @@ func resourceFortiadcLoadbalancePool() *schema.Resource {
 		Read:   resourceFortiadcLoadbalancePoolRead,
 		Update: resourceFortiadcLoadbalancePoolUpdate,
 		Delete: resourceFortiadcLoadbalancePoolDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"pool_type": &schema.Schema{
+			"pool_type": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "ipv4",
 			},
-			"healtcheck_enable": &schema.Schema{
+			"healtcheck_enable": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
 			},
-			"healtcheck_relationship": &schema.Schema{
+			"healtcheck_relationship": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "AND",
@@ -41,7 +44,7 @@ func resourceFortiadcLoadbalancePool() *schema.Resource {
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"real_server_ssl_profile": &schema.Schema{
+			"real_server_ssl_profile": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "NONE",

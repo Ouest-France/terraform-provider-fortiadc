@@ -59,3 +59,11 @@ resource "fortiadc_loadbalance_virtual_server" "myvirtualserver" {
 ## Attribute Reference
 
 * `id` - Virtual server Mkey (internal ID).
+
+## Import
+
+Virtual servers can be imported using their name:
+
+```
+$ terraform import fortiadc_loadbalance_virtual_server.myvirtualserver myvirtualserver
+```
