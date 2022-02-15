@@ -16,52 +16,55 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 		Read:   resourceFortiadcLoadbalanceVirtualServerRead,
 		Update: resourceFortiadcLoadbalanceVirtualServerUpdate,
 		Delete: resourceFortiadcLoadbalanceVirtualServerDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "enable",
 			},
-			"type": &schema.Schema{
+			"type": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "l4-load-balance",
 			},
-			"address_type": &schema.Schema{
+			"address_type": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "ipv4",
 			},
-			"address": &schema.Schema{
+			"address": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"packet_forward_method": &schema.Schema{
+			"packet_forward_method": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "NAT",
 			},
-			"source_pool_list": &schema.Schema{
+			"source_pool_list": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"port": &schema.Schema{
+			"port": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"connection_limit": &schema.Schema{
+			"connection_limit": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  0,
 			},
-			"content_routing_enable": &schema.Schema{
+			"content_routing_enable": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
@@ -71,7 +74,7 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"content_rewriting_enable": &schema.Schema{
+			"content_rewriting_enable": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
@@ -81,56 +84,56 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"connection_rate_limit": &schema.Schema{
+			"connection_rate_limit": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  0,
 			},
-			"error_page": &schema.Schema{
+			"error_page": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "",
 			},
-			"error_msg": &schema.Schema{
+			"error_msg": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "Server-unavailable!",
 			},
-			"interface": &schema.Schema{
+			"interface": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "port1",
 			},
-			"profile": &schema.Schema{
+			"profile": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "LB_PROF_TCP",
 			},
-			"method": &schema.Schema{
+			"method": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "LB_METHOD_ROUND_ROBIN",
 			},
-			"pool": &schema.Schema{
+			"pool": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"client_ssl_profile": &schema.Schema{
+			"client_ssl_profile": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "",
 			},
-			"http_to_https": &schema.Schema{
+			"http_to_https": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
 			},
-			"persistence": &schema.Schema{
+			"persistence": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "",
 			},
-			"traffic_log": &schema.Schema{
+			"traffic_log": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,

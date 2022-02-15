@@ -13,23 +13,26 @@ func resourceFortiadcLoadbalanceRealServer() *schema.Resource {
 		Read:   resourceFortiadcLoadbalanceRealServerRead,
 		Update: resourceFortiadcLoadbalanceRealServerUpdate,
 		Delete: resourceFortiadcLoadbalanceRealServerDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"address": &schema.Schema{
+			"address": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"address6": &schema.Schema{
+			"address6": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "::",
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "enable",

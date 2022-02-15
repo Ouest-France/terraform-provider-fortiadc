@@ -1,9 +1,11 @@
 package fortiadc
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/Ouest-France/gofortiadc"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -15,53 +17,81 @@ func resourceFortiadcLoadbalancePoolMember() *schema.Resource {
 		Read:   resourceFortiadcLoadbalancePoolMemberRead,
 		Update: resourceFortiadcLoadbalancePoolMemberUpdate,
 		Delete: resourceFortiadcLoadbalancePoolMemberDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: func(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+				client := m.(*gofortiadc.Client)
+
+				// Split id to pool and member names
+				idParts := strings.Split(d.Id(), ".")
+				if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
+					return nil, fmt.Errorf("unexpected format of ID (%q), expected POOL.MEMBER", d.Id())
+				}
+				pool := idParts[0]
+				member := idParts[1]
+
+				// Read member ID
+				mkey, err := client.LoadbalanceGetPoolMemberID(pool, member)
+				if err != nil {
+					return nil, err
+				}
+
+				// Set pool and member
+				err = d.Set("pool", pool)
+				if err != nil {
+					return nil, err
+				}
+				d.SetId(mkey)
+
+				return []*schema.ResourceData{d}, nil
+			},
+		},
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"pool": &schema.Schema{
+			"pool": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "enable",
 			},
-			"port": &schema.Schema{
+			"port": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"weight": &schema.Schema{
+			"weight": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  1,
 			},
-			"conn_limit": &schema.Schema{
+			"conn_limit": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  0,
 			},
-			"recover": &schema.Schema{
+			"recover": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  0,
 			},
-			"warmup": &schema.Schema{
+			"warmup": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  0,
 			},
-			"warmrate": &schema.Schema{
+			"warmrate": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  100,
 			},
-			"conn_rate_limit": &schema.Schema{
+			"conn_rate_limit": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  0,
