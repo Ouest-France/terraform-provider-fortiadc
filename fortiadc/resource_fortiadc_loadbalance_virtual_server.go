@@ -138,6 +138,11 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
+			"transaction_rate_limit": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  0,
+			},
 		},
 	}
 }
@@ -221,6 +226,7 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		ErrorMsg:             d.Get("error_msg").(string),
 		ErrorPage:            d.Get("error_page").(string),
 		TrafficLog:           boolToEnable(d.Get("traffic_log").(bool)),
+		TransRateLimit:       fmt.Sprintf("%d", d.Get("transaction_rate_limit").(int)),
 	}
 
 	err := client.LoadbalanceCreateVirtualServer(req)
@@ -306,6 +312,12 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		return err
 	}
 	arguments["connection_limit"] = connectionLimit
+
+	transactionRateLimit, err := strconv.ParseInt(rs.TransRateLimit, 10, 64)
+	if err != nil {
+		return err
+	}
+	arguments["transaction_rate_limit"] = transactionRateLimit
 
 	connectionRateLimit, err := strconv.ParseInt(rs.ConnectionRateLimit, 10, 64)
 	if err != nil {
@@ -399,6 +411,7 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		ErrorMsg:             d.Get("error_msg").(string),
 		ErrorPage:            d.Get("error_page").(string),
 		TrafficLog:           boolToEnable(d.Get("traffic_log").(bool)),
+		TransRateLimit:       fmt.Sprintf("%d", d.Get("transaction_rate_limit").(int)),
 	}
 
 	err := client.LoadbalanceUpdateVirtualServer(req)
