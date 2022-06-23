@@ -26,6 +26,11 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
+			"comment": {
+				Type:     schema.TypeString,
+				Required: false,
+				Optional: true,
+			},
 			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -227,6 +232,7 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		ErrorPage:            d.Get("error_page").(string),
 		TrafficLog:           boolToEnable(d.Get("traffic_log").(bool)),
 		TransRateLimit:       fmt.Sprintf("%d", d.Get("transaction_rate_limit").(int)),
+		Comments:             d.Get("comment").(string),
 	}
 
 	err := client.LoadbalanceCreateVirtualServer(req)
