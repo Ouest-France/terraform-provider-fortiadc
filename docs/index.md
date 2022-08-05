@@ -18,6 +18,7 @@ provider "fortiadc" {
   address  = "https://fortiadc.mydomain.com"
   user     = "myuser"
   password = "mypassword"
+  vdom   = "root" # Optional parameter for FortiADC vdoms 
 }
 
 # Real server definition
@@ -39,6 +40,8 @@ resource "fortiadc_loadbalance_real_server" "myrealserver" {
 * `password` - (Required) This is the FortiADC password to access the API.
 
 * `insecure` - (Optional) This enable or disable TLS certificate verification, defaults to `false`.
+
+* `vdom` - (Optional) Set the FortiADC Virtual DOM, defaults to `""`.
 
 ## Requirements
 
