@@ -305,6 +305,7 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		"error_msg":                rs.ErrorMsg,
 		"error_page":               rs.ErrorPage,
 		"traffic_log":              enableToBool(rs.TrafficLog),
+		"comments":                 rs.Comments,
 	}
 
 	port, err := strconv.ParseInt(strings.TrimSpace(rs.Port), 10, 64)
@@ -418,6 +419,7 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		ErrorPage:            d.Get("error_page").(string),
 		TrafficLog:           boolToEnable(d.Get("traffic_log").(bool)),
 		TransRateLimit:       fmt.Sprintf("%d", d.Get("transaction_rate_limit").(int)),
+		Comments:             d.Get("comments").(string),
 	}
 
 	err := client.LoadbalanceUpdateVirtualServer(req)
