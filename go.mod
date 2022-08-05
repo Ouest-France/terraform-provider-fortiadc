@@ -3,7 +3,7 @@ module github.com/Ouest-France/terraform-provider-fortiadc
 go 1.18
 
 require (
-	github.com/Ouest-France/gofortiadc v0.2.0
+	github.com/Ouest-France/gofortiadc v0.2.1
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.20.0
 )
 

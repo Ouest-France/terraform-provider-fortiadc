@@ -34,6 +34,12 @@ func Provider() *schema.Provider {
 				Default:     false,
 				Description: "Disable TLS Verify",
 			},
+			"vdom": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
+				Description: "Virtual DOM",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"fortiadc_loadbalance_real_server":                 resourceFortiadcLoadbalanceRealServer(),
@@ -64,6 +70,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Address:  d.Get("address").(string),
 		Username: d.Get("user").(string),
 		Password: d.Get("password").(string),
+		VDom:     d.Get("vdom").(string),
 	}
 
 	err := client.Login()
