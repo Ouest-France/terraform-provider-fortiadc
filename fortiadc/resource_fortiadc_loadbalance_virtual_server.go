@@ -232,7 +232,7 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		ErrorPage:            d.Get("error_page").(string),
 		TrafficLog:           boolToEnable(d.Get("traffic_log").(bool)),
 		TransRateLimit:       fmt.Sprintf("%d", d.Get("transaction_rate_limit").(int)),
-		Comments:             d.Get("comment").(string),
+		Comments:             d.Get("comments").(string),
 	}
 
 	err := client.LoadbalanceCreateVirtualServer(req)
