@@ -26,7 +26,7 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"comment": {
+			"comments": {
 				Type:     schema.TypeString,
 				Required: false,
 				Optional: true,
