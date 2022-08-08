@@ -56,6 +56,7 @@ resource "fortiadc_loadbalance_virtual_server" "myvirtualserver" {
 * `error_page` - (Optional) Error page on backend failure.
 * `persistence` - (Optional) Persistence configuration.
 * `transaction_rate_limit` - (Optional) Limit of transactions per second. Defaults to `0`.
+* `comments` - (Optional) Set the comment field on the resource.
 
 ## Attribute Reference
 
