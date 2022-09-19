@@ -77,6 +77,7 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 			"content_routing_list": {
 				Type:     schema.TypeList,
 				Optional: true,
+				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"content_rewriting_enable": {
@@ -87,6 +88,7 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 			"content_rewriting_list": {
 				Type:     schema.TypeList,
 				Optional: true,
+				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"connection_rate_limit": {
