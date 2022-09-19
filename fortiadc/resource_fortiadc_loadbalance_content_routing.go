@@ -15,32 +15,32 @@ func resourceFortiadcLoadbalanceContentRouting() *schema.Resource {
 		Delete: resourceFortiadcLoadbalanceContentRoutingDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"type": &schema.Schema{
+			"type": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "l7-content-routing",
 			},
-			"comment": &schema.Schema{
+			"comment": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "comments",
 			},
-			"ipv4": &schema.Schema{
+			"ipv4": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "0.0.0.0/0",
 			},
-			"ipv6": &schema.Schema{
+			"ipv6": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "::/0",
 			},
-			"pool": &schema.Schema{
+			"pool": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
