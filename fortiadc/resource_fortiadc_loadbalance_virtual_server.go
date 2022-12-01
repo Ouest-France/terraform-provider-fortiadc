@@ -61,7 +61,7 @@ func resourceFortiadcLoadbalanceVirtualServer() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"port": {
-				Type:     schema.TypeInt,
+				Type:     schema.TypeString,
 				Required: true,
 			},
 			"connection_limit": {
@@ -212,7 +212,7 @@ func resourceFortiadcLoadbalanceVirtualServerCreate(d *schema.ResourceData, m in
 		Address6:             "::",
 		PacketFwdMethod:      d.Get("packet_forward_method").(string),
 		SourcePoolList:       strings.Join(spList, " "),
-		Port:                 fmt.Sprintf("%d", d.Get("port").(int)),
+		Port:                 d.Get("port").(string),
 		ConnectionLimit:      fmt.Sprintf("%d", d.Get("connection_limit").(int)),
 		ContentRouting:       boolToEnable(d.Get("content_routing_enable").(bool)),
 		ContentRoutingList:   strings.Join(crList, " "),
@@ -301,6 +301,7 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		"profile":                  rs.Profile,
 		"method":                   rs.Method,
 		"pool":                     rs.Pool,
+		"port":						strings.Trim(rs.Port," "),
 		"client_ssl_profile":       rs.ClientSSLProfile,
 		"http_to_https":            enableToBool(rs.HTTP2HTTPS),
 		"persistence":              rs.Persistence,
@@ -309,13 +310,7 @@ func resourceFortiadcLoadbalanceVirtualServerRead(d *schema.ResourceData, m inte
 		"traffic_log":              enableToBool(rs.TrafficLog),
 		"comments":                 rs.Comments,
 	}
-
-	port, err := strconv.ParseInt(strings.TrimSpace(rs.Port), 10, 64)
-	if err != nil {
-		return err
-	}
-	arguments["port"] = port
-
+	
 	connectionLimit, err := strconv.ParseInt(rs.ConnectionLimit, 10, 64)
 	if err != nil {
 		return err
@@ -399,7 +394,7 @@ func resourceFortiadcLoadbalanceVirtualServerUpdate(d *schema.ResourceData, m in
 		Address6:             "::",
 		PacketFwdMethod:      d.Get("packet_forward_method").(string),
 		SourcePoolList:       strings.Join(spList, " "),
-		Port:                 fmt.Sprintf("%d", d.Get("port").(int)),
+		Port:                 d.Get("port").(string),
 		ConnectionLimit:      fmt.Sprintf("%d", d.Get("connection_limit").(int)),
 		ContentRouting:       boolToEnable(d.Get("content_routing_enable").(bool)),
 		ContentRoutingList:   strings.Join(crList, " "),
