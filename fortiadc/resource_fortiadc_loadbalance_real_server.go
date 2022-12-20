@@ -2,6 +2,7 @@ package fortiadc
 
 import (
 	"errors"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	"github.com/Ouest-France/gofortiadc"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,6 +19,12 @@ func resourceFortiadcLoadbalanceRealServer() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"type": {
+				Type:         schema.TypeString,
+				ValidateFunc: validation.StringInSlice([]string{"fqdn", "ip"}, false),
+				Default:      "ip",
+				Optional:     true,
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -25,12 +32,16 @@ func resourceFortiadcLoadbalanceRealServer() *schema.Resource {
 			},
 			"address": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"address6": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "::",
+			},
+			"fqdn": {
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 			"status": {
 				Type:     schema.TypeString,
@@ -46,9 +57,11 @@ func resourceFortiadcLoadbalanceRealServerCreate(d *schema.ResourceData, m inter
 
 	req := gofortiadc.LoadbalanceRealServer{
 		Mkey:     d.Get("name").(string),
+		Type:     d.Get("type").(string),
 		Status:   d.Get("status").(string),
 		Address:  d.Get("address").(string),
 		Address6: d.Get("address6").(string),
+		FQDN:     d.Get("fqdn").(string),
 	}
 
 	err := client.LoadbalanceCreateRealServer(req)
@@ -76,9 +89,11 @@ func resourceFortiadcLoadbalanceRealServerRead(d *schema.ResourceData, m interfa
 
 	arguments := map[string]interface{}{
 		"name":     rs.Mkey,
+		"type":     rs.Type,
 		"address":  rs.Address,
 		"address6": rs.Address6,
 		"status":   rs.Status,
+		"fqdn":     rs.FQDN,
 	}
 
 	for arg, value := range arguments {
@@ -96,9 +111,11 @@ func resourceFortiadcLoadbalanceRealServerUpdate(d *schema.ResourceData, m inter
 
 	req := gofortiadc.LoadbalanceRealServer{
 		Mkey:     d.Get("name").(string),
+		Type:     d.Get("type").(string),
 		Status:   d.Get("status").(string),
 		Address:  d.Get("address").(string),
 		Address6: d.Get("address6").(string),
+		FQDN:     d.Get("fqdn").(string),
 	}
 
 	err := client.LoadbalanceUpdateRealServer(req)
