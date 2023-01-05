@@ -1,3 +1,4 @@
 *.tf*
 .terraform
 terraform-provider-fortiadc
+.idea
