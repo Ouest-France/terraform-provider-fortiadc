@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/Ouest-France/gofortiadc v0.3.0
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.26.0
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.26.1
 )
 
 require (
